@@ -1,5 +1,6 @@
 import ApiAuthorzationRoutes from './components/api-authorization/ApiAuthorizationRoutes';
 import { Counter } from "./components/Counter";
+import { Crossword } from './components/Crossword';
 import { FetchData } from "./components/FetchData";
 import { Home } from "./components/Home";
 
@@ -11,6 +12,10 @@ const AppRoutes = [
   {
     path: '/counter',
     element: <Counter />
+  },
+  {
+    path: '/crossword',
+    element: <Crossword />
   },
   {
     path: '/fetch-data',
