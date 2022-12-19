@@ -44,22 +44,29 @@ export class Crossword extends Component {
       currentQuestionIndex: 0,
       score: 0,
       answerContainsOnlyLetters: false, //czy odpwowiedz ma same litery
-      answerIsLowercase: false, //czy odpowiedz jest napisana malymi literami
+      answerIsLowercase: false //czy odpowiedz jest napisana malymi literami
     };
 
      // Bind functions to the component instance
     this.resetQuiz = this.resetQuiz.bind(this);
   }
+  
   currentAnswer="";
+
+
   handleChange = event =>{
     this.currentAnswer = event.target.value.toLowerCase();
   }
+
+
 
     // Function to reset the quiz
     resetQuiz() {
         // Reset the current question index and score
         this.setState({ currentQuestionIndex: 0, score: 0 });
     }
+
+
 
   // Function to handle when the user selects an answer
   handleAnswerSelected = event => {
@@ -94,33 +101,28 @@ export class Crossword extends Component {
   };
 
 
-  validateUserData(event) {
-    let id = event.target.id;
-    let data = event.target.value;
+  validateUserData(e) {
+    let data = e.target.value;
     var letters = /^[A-Za-z]+$/;
-     
-    if (data.length >= 1) {
-        if (data === data.toLowerCase()) {
-            this.setState({
-                [id + "answerIsLowercase"]: true 
-            });
-        } else { 
-            this.setState({ 
-                [id + "answerIsLowercase"]: false 
-            });
-        }
-        
-        if (data.match(letters)) {
-            this.setState({
-                [id + "ContainsOnlyLetters"]: true
-            });
-        } else {
-            this.setState({
-                [id + "ContainsOnlyLetters"]: false
-            });
-        }
+
+    //this.setState({ answerIsLowercase: true });
+
+    if (data === data.toLowerCase()) {
+      this.setState({ answerIsLowercase: true });
     } 
-} 
+    else { 
+      this.setState({ answerIsLowercase: false });
+    }
+  
+    if (data.match(letters)) { //czy jest liczba
+        this.setState({ answerContainsOnlyLetters: true });
+    } else {
+        this.setState({ answerContainsOnlyLetters: false });
+    }
+
+    
+  } 
+
 
 
 
@@ -142,7 +144,7 @@ export class Crossword extends Component {
                 ))
             )}
             {currentQuestion.type!=="radio" &&(
-                <AnswerInput type={currentQuestion.type} questionId={this.state.currentQuestionIndex} handleChange={this.handleChange} handleAnswerSelected={this.handleAnswerSelected}/>
+                <AnswerInput type={currentQuestion.type} questionId={this.state.currentQuestionIndex} handleChange={this.handleChange} handleAnswerSelected={this.handleAnswerSelected} state = {this.state} to = {this}/>
             )}
           </Question>
         )}
@@ -174,11 +176,11 @@ function AnswerSelect({ answer, value, handleAnswerSelected }) {
   );
 }
 
-function AnswerInput({ type, handleAnswerSelected, handleChange }) {
-    const { answerContainsOnlyLetters, answerIsLowercase } = this.state;
+function AnswerInput({ type, handleAnswerSelected, handleChange, state, to }) {
+    const { answerContainsOnlyLetters, answerIsLowercase } = state;
     return (
         <div >
-            <input type={type} onChange={  (e) => this.validateUserData(e)} /> 
+            <input type={type} id = "answer" onChange={(e) => to.validateUserData(e)} /> 
             <Error status={answerContainsOnlyLetters} info="Odpowiedź musi zawierać same litery" ></Error>
             <Error status={answerIsLowercase} info="Odpowidź musi być napisana malymi literami" ></Error>
             <button onClick={handleAnswerSelected}> Następne Pytanie </button>
