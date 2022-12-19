@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Error from "./Error";
 
 const questions = [  
     {    
@@ -35,12 +36,15 @@ const questions = [
 
 export class Crossword extends Component {
   constructor(props) {
+    
     super(props);
 
     // Set up initial state
     this.state = {
       currentQuestionIndex: 0,
       score: 0,
+      answerContainsOnlyLetters: false, //czy odpwowiedz ma same litery
+      answerIsLowercase: false, //czy odpowiedz jest napisana malymi literami
     };
 
      // Bind functions to the component instance
@@ -90,11 +94,39 @@ export class Crossword extends Component {
   };
 
 
+  validateUserData(event) {
+    let id = event.target.id;
+    let data = event.target.value;
+    var letters = /^[A-Za-z]+$/;
+     
+    if (data.length >= 1) {
+        if (data === data.toLowerCase()) {
+            this.setState({
+                [id + "answerIsLowercase"]: true 
+            });
+        } else { 
+            this.setState({ 
+                [id + "answerIsLowercase"]: false 
+            });
+        }
+        
+        if (data.match(letters)) {
+            this.setState({
+                [id + "ContainsOnlyLetters"]: true
+            });
+        } else {
+            this.setState({
+                [id + "ContainsOnlyLetters"]: false
+            });
+        }
+    } 
+} 
+
+
 
   render() {
     // Get the current question from the list of questions
     const currentQuestion = questions[this.state.currentQuestionIndex];
-
     return (
       <div>
         {/* If the quiz is not finished, display the current question */}
@@ -143,9 +175,12 @@ function AnswerSelect({ answer, value, handleAnswerSelected }) {
 }
 
 function AnswerInput({ type, handleAnswerSelected, handleChange }) {
+    const { answerContainsOnlyLetters, answerIsLowercase } = this.state;
     return (
         <div >
-            <input type={type} onChange={handleChange} />
+            <input type={type} onChange={  (e) => this.validateUserData(e)} /> 
+            <Error status={answerContainsOnlyLetters} info="Odpowiedź musi zawierać same litery" ></Error>
+            <Error status={answerIsLowercase} info="Odpowidź musi być napisana malymi literami" ></Error>
             <button onClick={handleAnswerSelected}> Następne Pytanie </button>
         </div>
         

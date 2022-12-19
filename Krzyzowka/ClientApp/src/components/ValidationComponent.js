@@ -58,7 +58,7 @@ class ValidationComponent extends Component {
             <Error status={answerIsLowercase} info="Odpowidź musi być napisana malymi literami" ></Error>
             </div>
             <div> Answer: <input type="text" id="answer_number" onChange={(e) => this.validateUserData(e)}/>
-            <Error status={answerContainsOnlyNumbers} info="Odpowidź musi zawierać same cyfry" ></Error>
+            <Error status={answerContainsOnlyNumbers} info="Odpowiedź musi zawierać same cyfry" ></Error>
             </div>
              
         </div>
