@@ -4,7 +4,7 @@ const questions = [
     {    
         question: "In which year was the Declaration of Independence signed?",    
         type: "number",
-        correctAnswer: "1776",
+        correctAnswer: 1776,
       },
         {
             question: "What is the atomic number of carbon?",
@@ -72,7 +72,7 @@ export class Crossword extends Component {
             isCorrect= currentQuestion.correctAnswer === event.target.value;
         break;
         case "number":
-            isCorrect= currentQuestion.correctAnswer === this.currentAnswer;
+            isCorrect= currentQuestion.correctAnswer === Number(this.currentAnswer);
         break;
         default:
         break;
@@ -110,7 +110,7 @@ export class Crossword extends Component {
                 ))
             )}
             {currentQuestion.type!=="radio" &&(
-                <AnswerInput type={currentQuestion.type} questionId={this.state.currentQuestionIndex} handleChange={this.handleChange} handleAnswerSelected={this.handleAnswerSelected}/>
+                <AnswerInput type={Text} questionId={this.state.currentQuestionIndex} handleChange={this.handleChange} handleAnswerSelected={this.handleAnswerSelected}/>
             )}
           </Question>
         )}
@@ -162,3 +162,6 @@ function Result({ score, total, resetQuiz}) {
       </div>
     );
   }
+
+
+
