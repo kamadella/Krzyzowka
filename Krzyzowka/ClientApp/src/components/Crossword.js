@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Error from "./Error";
 
 const questions = [  
     {    
@@ -35,27 +36,38 @@ const questions = [
 
 export class Crossword extends Component {
   constructor(props) {
+    
     super(props);
 
     // Set up initial state
     this.state = {
       currentQuestionIndex: 0,
       score: 0,
+      answerContainsNumbers: false, //czy odpwowiedz ma same litery
+      answerIsLowercase: false, //czy odpowiedz jest napisana malymi literami
+      answerContainsFormat: false
     };
 
      // Bind functions to the component instance
     this.resetQuiz = this.resetQuiz.bind(this);
   }
+  
   currentAnswer="";
-  handleChange = event =>{
+
+
+  handleChange ( event ){
     this.currentAnswer = event.target.value.toLowerCase();
   }
+
+
 
     // Function to reset the quiz
     resetQuiz() {
         // Reset the current question index and score
         this.setState({ currentQuestionIndex: 0, score: 0 });
     }
+
+
 
   // Function to handle when the user selects an answer
   handleAnswerSelected = event => {
@@ -90,11 +102,41 @@ export class Crossword extends Component {
   };
 
 
+  validateAnswerData( event ){
+    let data = event.target.value;
+    var numbers = /[0-9]/;
+    var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+
+    //this.setState({ answerIsLowercase: true });
+
+    if (data === data.toLowerCase()) {
+      this.setState({ answerIsLowercase: true });
+    } 
+    else { 
+      this.setState({ answerIsLowercase: false });
+    }
+  
+    if (data.match(numbers)) { //czy jest liczba
+        this.setState({ answerContainsNumbers: false });
+    } else {
+        this.setState({ answerContainsNumbers: true });
+    }
+
+    if (data.match(format)) { //czy ma znaki psecjalne
+      this.setState({ answerContainsFormat: false });
+  } else {
+      this.setState({ answerContainsFormat: true });
+  }
+
+    
+  } 
+
+
+
 
   render() {
     // Get the current question from the list of questions
     const currentQuestion = questions[this.state.currentQuestionIndex];
-
     return (
       <div>
         {/* If the quiz is not finished, display the current question */}
@@ -110,7 +152,7 @@ export class Crossword extends Component {
                 ))
             )}
             {currentQuestion.type!=="radio" &&(
-                <AnswerInput type={Text} questionId={this.state.currentQuestionIndex} handleChange={this.handleChange} handleAnswerSelected={this.handleAnswerSelected}/>
+                <AnswerInput type={Text} questionId={this.state.currentQuestionIndex} handleChange={this.handleChange} handleAnswerSelected={this.handleAnswerSelected} to={this}/>
             )}
           </Question>
         )}
@@ -142,14 +184,29 @@ function AnswerSelect({ answer, value, handleAnswerSelected }) {
   );
 }
 
-function AnswerInput({ type, handleAnswerSelected, handleChange }) {
-    return (
+function AnswerInput({ type, handleAnswerSelected, handleChange, to, questionId }) {
+    const { answerContainsNumbers, answerIsLowercase, answerContainsFormat } = to.state;
+    if(questionId !== 3){
+      return (
         <div >
-            <input type={type} onChange={handleChange} />
+            <input type={type} onChange={e => to.handleChange(e) } /> 
             <button onClick={handleAnswerSelected}> Następne Pytanie </button>
         </div>
         
     );
+    }
+    else{
+      return (
+        <div >
+            <input type={type} onChange={e => { to.validateAnswerData(e); to.handleChange(e) }} /> 
+            <Error status={answerContainsNumbers} info="Odpowiedź nie może zawierać liczb" ></Error>
+            <Error status={answerIsLowercase} info="Odpowiedź musi być napisana malymi literami" ></Error>
+            <Error status={answerContainsFormat} info="Odpowiedź nie może zawierać znaków specjalnych" ></Error>
+            <button onClick={handleAnswerSelected}> Następne Pytanie </button>
+        </div>
+    );
+    }
+
   }
 
 function Result({ score, total, resetQuiz}) {
