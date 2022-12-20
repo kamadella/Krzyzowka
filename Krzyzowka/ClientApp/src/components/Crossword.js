@@ -105,7 +105,7 @@ export class Crossword extends Component {
   validateAnswerData( event ){
     let data = event.target.value;
     var numbers = /[0-9]/;
-    var format = /[!@#$%^&*()_+-=[{};':"|,.<>/?]/;
+    var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 
     //this.setState({ answerIsLowercase: true });
 
@@ -152,7 +152,7 @@ export class Crossword extends Component {
                 ))
             )}
             {currentQuestion.type!=="radio" &&(
-                <AnswerInput type={Text} questionId={this.state.currentQuestionIndex} handleChange={this.handleChange} handleAnswerSelected={this.handleAnswerSelected}/>
+                <AnswerInput type={Text} questionId={this.state.currentQuestionIndex} handleChange={this.handleChange} handleAnswerSelected={this.handleAnswerSelected} to={this}/>
             )}
           </Question>
         )}
@@ -184,12 +184,12 @@ function AnswerSelect({ answer, value, handleAnswerSelected }) {
   );
 }
 
-function AnswerInput({ type, handleAnswerSelected, handleChange, state, to }) {
-    const { answerContainsNumbers, answerIsLowercase, answerContainsFormat } = state;
-    if(type === "number"){
+function AnswerInput({ type, handleAnswerSelected, handleChange, to, questionId }) {
+    const { answerContainsNumbers, answerIsLowercase, answerContainsFormat } = to.state;
+    if(questionId !== 3){
       return (
         <div >
-            <input type={type} onChange={handleChange} /> 
+            <input type={type} onChange={e => to.handleChange(e) } /> 
             <button onClick={handleAnswerSelected}> Następne Pytanie </button>
         </div>
         
