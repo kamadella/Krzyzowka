@@ -43,8 +43,9 @@ export class Crossword extends Component {
     this.state = {
       currentQuestionIndex: 0,
       score: 0,
-      answerContainsOnlyLetters: false, //czy odpwowiedz ma same litery
-      answerIsLowercase: false //czy odpowiedz jest napisana malymi literami
+      answerContainsNumbers: false, //czy odpwowiedz ma same litery
+      answerIsLowercase: false, //czy odpowiedz jest napisana malymi literami
+      answerContainsFormat: false
     };
 
      // Bind functions to the component instance
@@ -54,7 +55,7 @@ export class Crossword extends Component {
   currentAnswer="";
 
 
-  handleChange = event =>{
+  handleChange ( event ){
     this.currentAnswer = event.target.value.toLowerCase();
   }
 
@@ -101,9 +102,10 @@ export class Crossword extends Component {
   };
 
 
-  validateUserData(e) {
-    let data = e.target.value;
-    var letters = /^[A-Za-z]+$/;
+  validateAnswerData( event ){
+    let data = event.target.value;
+    var numbers = /[0-9]/;
+    var format = /[!@#$%^&*()_+-=[{};':"|,.<>/?]/;
 
     //this.setState({ answerIsLowercase: true });
 
@@ -114,11 +116,17 @@ export class Crossword extends Component {
       this.setState({ answerIsLowercase: false });
     }
   
-    if (data.match(letters)) { //czy jest liczba
-        this.setState({ answerContainsOnlyLetters: true });
+    if (data.match(numbers)) { //czy jest liczba
+        this.setState({ answerContainsNumbers: false });
     } else {
-        this.setState({ answerContainsOnlyLetters: false });
+        this.setState({ answerContainsNumbers: true });
     }
+
+    if (data.match(format)) { //czy ma znaki psecjalne
+      this.setState({ answerContainsFormat: false });
+  } else {
+      this.setState({ answerContainsFormat: true });
+  }
 
     
   } 
@@ -177,16 +185,28 @@ function AnswerSelect({ answer, value, handleAnswerSelected }) {
 }
 
 function AnswerInput({ type, handleAnswerSelected, handleChange, state, to }) {
-    const { answerContainsOnlyLetters, answerIsLowercase } = state;
-    return (
+    const { answerContainsNumbers, answerIsLowercase, answerContainsFormat } = state;
+    if(type === "number"){
+      return (
         <div >
-            <input type={type} id = "answer" onChange={(e) => to.validateUserData(e)} /> 
-            <Error status={answerContainsOnlyLetters} info="Odpowiedź musi zawierać same litery" ></Error>
-            <Error status={answerIsLowercase} info="Odpowidź musi być napisana malymi literami" ></Error>
+            <input type={type} onChange={handleChange} /> 
             <button onClick={handleAnswerSelected}> Następne Pytanie </button>
         </div>
         
     );
+    }
+    else{
+      return (
+        <div >
+            <input type={type} onChange={e => { to.validateAnswerData(e); to.handleChange(e) }} /> 
+            <Error status={answerContainsNumbers} info="Odpowiedź nie może zawierać liczb" ></Error>
+            <Error status={answerIsLowercase} info="Odpowiedź musi być napisana malymi literami" ></Error>
+            <Error status={answerContainsFormat} info="Odpowiedź nie może zawierać znaków specjalnych" ></Error>
+            <button onClick={handleAnswerSelected}> Następne Pytanie </button>
+        </div>
+    );
+    }
+
   }
 
 function Result({ score, total, resetQuiz}) {
