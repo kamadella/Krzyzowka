@@ -2,35 +2,39 @@ import React, { Component } from 'react';
 import Error from "./Error";
 
 const questions = [  
-    {    
-        question: "In which year was the Declaration of Independence signed?",    
-        type: "number",
-        correctAnswer: 1776,
-      },
-        {
-            question: "What is the atomic number of carbon?",
-            type: "number",
-            correctAnswer: 6,
-        },
-    {
-        question: "What is the capital of Australia?",
-        type: "radio",
-        answers: [
-          { id: "A", text: "Sydney", value: "A" },
-          { id: "B", text: "Melbourne", value: "B" },
-          { id: "C", text: "Perth", value: "C" },
-          { id: "D", text: "Canberra", value: "D" },
-        ],
-        correctAnswer: "D",
-      },
-    {
-        question: "Co to ciapąg?",
-        type: "text",
-        correctAnswers: [
-            "pociąg",
-            "ciuchcia"
-        ]
-    }
+  { 
+    questionId: 1,   
+    question: "In which year was the Declaration of Independence signed?",    
+    type: "number",
+    correctAnswer: 1776,
+  },
+  {
+    questionId: 2,
+    question: "What is the atomic number of carbon?",
+    type: "number",
+    correctAnswer: 6,
+  },
+  {
+    questionId: 3,
+    question: "What is the capital of Australia?",
+    type: "radio",
+    answers: [
+      { id: "A", text: "Sydney", value: "A" },
+      { id: "B", text: "Melbourne", value: "B" },
+      { id: "C", text: "Perth", value: "C" },
+      { id: "D", text: "Canberra", value: "D" },
+    ],
+    correctAnswer: "D",
+  },
+  {
+    questionId: 4,
+    question: "Co to ciapąg?",
+    type: "text",
+    correctAnswers: [
+      "pociąg",
+      "ciuchcia"
+    ]
+  }
 ];
 
 
@@ -105,6 +109,7 @@ export class Crossword extends Component {
   validateAnswerData( event ){
     let data = event.target.value;
     var numbers = /[0-9]/;
+    // eslint-disable-next-line
     var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 
     //this.setState({ answerIsLowercase: true });
