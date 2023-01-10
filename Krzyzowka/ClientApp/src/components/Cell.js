@@ -4,7 +4,11 @@ import "../styles/cell.css";
 export default class Cell extends Component {
     constructor(props) {
         super(props);
-        this.state = { editing: false, value: props.value, inputVal: "" };
+        this.state = { 
+            editing: false, 
+            value: props.value, 
+            inputVal: "" 
+        };
     }
 
     handleFocus = () => {
@@ -23,24 +27,27 @@ export default class Cell extends Component {
     };
 
     render() {
+        //(status = age >= 18 ? 'adult' : 'minor';)
         const style = this.state.editing
-            ? "rgb(200,200,0)"
+            ? "rgb(255,255,153)" //żółty
             : this.state.value === ""
-            ? "rgb(10, 10, 10)"
+            ? "rgb(10, 10, 10)" //czarny
             : this.state.editing
-            ? "rgb(200,200,0)"
-            : "rgb(200, 200, 200)";
+            ? "rgb(255,255,153)"  //żółty
+            : "rgb(200, 200, 200)"; //szary
 
+        //skomplikowane wyliczenia zeby komorki ladnie sie wyswietlaly
         const x =
             this.props.x === 1
                 ? this.props.x
-                : this.props.x + 10 * (this.props.x - 1);
+                : this.props.x + 10 * (this.props.x - 1); 
 
         const y =
             this.props.y === 1
                 ? this.props.y
                 : this.props.y + 10 * (this.props.y - 1);
 
+        //input w komorkach
         const input = (
             <foreignObject
                 x={x}
@@ -64,6 +71,7 @@ export default class Cell extends Component {
                 </div>
             </foreignObject>
         );
+
         return (
             <svg className="cell">
                 <g>
@@ -74,7 +82,7 @@ export default class Cell extends Component {
                         height={10}
                         style={{
                             fill: style,
-                            strokeWidth: "0.4px",
+                            strokeWidth: "0.5px",
                             stroke: "black"
                         }}
                     />
@@ -88,7 +96,7 @@ export default class Cell extends Component {
                         dominantBaseline="middle"
                         textAnchor="middle"
                     >
-                        {this.state.value}
+                        {this.state.value} 
                     </text>
                 </g>
                 {this.props.value === "" ? null : input}

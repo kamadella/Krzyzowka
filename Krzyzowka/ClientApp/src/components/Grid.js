@@ -14,18 +14,18 @@ export default class Grid extends Component {
     }
 
     populate() {
-        let width = this.props.data.width;
+        let width = this.props.data.width; //ile komorek na wysokosc
         let height = this.props.data.height;
         let newGrid = [];
 
         for (let i = 1; i < width; i++) {
             for (let j = 1; j < height; j++) {
-                newGrid.push(
+                newGrid.push( //tworzymy komórki
                     <Cell x={i} y={j} value={""} key={Math.random()} />
                 );
             }
         }
-        this.setState({ grid: newGrid });
+        this.setState({ grid: newGrid }); //tu ustalam cały grid komórek
     }
 
     componentDidMount() {
@@ -40,12 +40,9 @@ export default class Grid extends Component {
     handleWordClick = () => {};
 
     render() {
-        const dim =
-            "0 0 " +
-            (10 * this.props.data.width + 3) +
-            " " +
-            (10 * this.props.data.height + 3);
-
+        // to wielkosc calej planszy w sensie jak duza jest wyswietlana
+        const dim =" 0 0 " + (10 * this.props.data.width + 3) + " " + (10 * this.props.data.height + 3); 
+        // to tworzymy komórki na uzupelnianie hasla
         const words = this.props.data.wordList.map((word, index) => {
             return (
                 <Word
@@ -71,8 +68,8 @@ export default class Grid extends Component {
                         // How did props get here?
                     })}
                 >
-                {this.state.grid}
-                {words.reverse()}
+                {this.state.grid} {/* czarne komórki */}
+                {words} {/* komórki do wpisywania */}
                 </svg>
             </div>
         );
