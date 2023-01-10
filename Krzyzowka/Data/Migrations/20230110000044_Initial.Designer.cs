@@ -4,6 +4,7 @@ using Krzyzowka.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Krzyzowka.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230110000044_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,79 +230,6 @@ namespace Krzyzowka.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Krzyzowka.Models.CorrectAnswer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int?>("QuestionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("correctValue")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("CorrectAnswers");
-                });
-
-            modelBuilder.Entity("Krzyzowka.Models.PossibleAnswer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int?>("ClosedQuestionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("answerText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("isCorrect")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClosedQuestionId");
-
-                    b.ToTable("PossibleAnswers");
-                });
-
-            modelBuilder.Entity("Krzyzowka.Models.Question", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("questionText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("type")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Questions");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Question");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -438,27 +367,6 @@ namespace Krzyzowka.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Krzyzowka.Models.ClosedQuestion", b =>
-                {
-                    b.HasBaseType("Krzyzowka.Models.Question");
-
-                    b.HasDiscriminator().HasValue("ClosedQuestion");
-                });
-
-            modelBuilder.Entity("Krzyzowka.Models.CorrectAnswer", b =>
-                {
-                    b.HasOne("Krzyzowka.Models.Question", null)
-                        .WithMany("correctAnswers")
-                        .HasForeignKey("QuestionId");
-                });
-
-            modelBuilder.Entity("Krzyzowka.Models.PossibleAnswer", b =>
-                {
-                    b.HasOne("Krzyzowka.Models.ClosedQuestion", null)
-                        .WithMany("possibleAnswers")
-                        .HasForeignKey("ClosedQuestionId");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -508,16 +416,6 @@ namespace Krzyzowka.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Krzyzowka.Models.Question", b =>
-                {
-                    b.Navigation("correctAnswers");
-                });
-
-            modelBuilder.Entity("Krzyzowka.Models.ClosedQuestion", b =>
-                {
-                    b.Navigation("possibleAnswers");
                 });
 #pragma warning restore 612, 618
         }

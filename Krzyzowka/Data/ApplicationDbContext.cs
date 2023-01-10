@@ -13,5 +13,11 @@ namespace Krzyzowka.Data
         {
 
         }
+
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<ClosedQuestion> OpenQuestions { get; set; }
+        public DbSet<ClosedQuestion> ClosedQuestions { get; set; }
+        public DbSet<PossibleAnswer> PossibleAnswers { get; set; }
+        public DbSet<CorrectAnswer> CorrectAnswers { get; set; }
     }
 }
