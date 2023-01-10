@@ -2,6 +2,7 @@
 using Krzyzowka.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Krzyzowka.Controllers
 {
@@ -29,22 +30,22 @@ namespace Krzyzowka.Controllers
             if (!(_context.Questions.FirstOrDefault()!=null))
             {
                 Question[] example = new Question[]{
-                    new OpenQuestion {
+                    new Question {
                         questionText= "Rok podpisania niepodległości USA?",
                         type=Models.Type.number,
                         correctAnswers = new List<CorrectAnswer> { new CorrectAnswer { correctValue = "1776" } }
                     },
-                    new OpenQuestion {
+                    new Question {
                         questionText= "Numer atomowy węgla?",
                         type=Models.Type.number,
                         correctAnswers = new List<CorrectAnswer> { new CorrectAnswer { correctValue = "6" } }
                     },
-                    new OpenQuestion {
+                    new Question {
                         questionText= "Co to ciapąg?",
                         type=Models.Type.text,
                         correctAnswers = new List<CorrectAnswer> { new CorrectAnswer { correctValue = "pociąg" }, new CorrectAnswer() { correctValue = "ciuchcia" }  }
                     },
-                    new ClosedQuestion {
+                    new Question {
                         questionText= "Co jest stolicą Australii?",
                         type=Models.Type.checkbox,
                         possibleAnswers = new List<PossibleAnswer>
@@ -61,7 +62,7 @@ namespace Krzyzowka.Controllers
                 _context.SaveChanges();
             }
 
-            return _context.Questions.ToArray();
+            return _context.Questions.Include(p=>p.possibleAnswers).Include(c=>c.correctAnswers).ToArray();
         }
     }
 }

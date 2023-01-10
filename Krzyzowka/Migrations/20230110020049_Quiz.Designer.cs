@@ -4,6 +4,7 @@ using Krzyzowka.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Krzyzowka.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230110020049_Quiz")]
+    partial class Quiz
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -236,7 +238,7 @@ namespace Krzyzowka.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("QuestionId")
+                    b.Property<int>("QuestionId")
                         .HasColumnType("int");
 
                     b.Property<string>("correctValue")
@@ -258,7 +260,10 @@ namespace Krzyzowka.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("ClosedQuestionId")
+                    b.Property<int>("ClosedQuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("QuestionId")
                         .HasColumnType("int");
 
                     b.Property<string>("answerText")
@@ -270,7 +275,7 @@ namespace Krzyzowka.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClosedQuestionId");
+                    b.HasIndex("QuestionId");
 
                     b.ToTable("PossibleAnswers");
                 });
@@ -283,10 +288,6 @@ namespace Krzyzowka.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("questionText")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -297,8 +298,6 @@ namespace Krzyzowka.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Questions");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Question");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -438,25 +437,20 @@ namespace Krzyzowka.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Krzyzowka.Models.ClosedQuestion", b =>
-                {
-                    b.HasBaseType("Krzyzowka.Models.Question");
-
-                    b.HasDiscriminator().HasValue("ClosedQuestion");
-                });
-
             modelBuilder.Entity("Krzyzowka.Models.CorrectAnswer", b =>
                 {
                     b.HasOne("Krzyzowka.Models.Question", null)
                         .WithMany("correctAnswers")
-                        .HasForeignKey("QuestionId");
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Krzyzowka.Models.PossibleAnswer", b =>
                 {
-                    b.HasOne("Krzyzowka.Models.ClosedQuestion", null)
+                    b.HasOne("Krzyzowka.Models.Question", null)
                         .WithMany("possibleAnswers")
-                        .HasForeignKey("ClosedQuestionId");
+                        .HasForeignKey("QuestionId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -513,10 +507,7 @@ namespace Krzyzowka.Migrations
             modelBuilder.Entity("Krzyzowka.Models.Question", b =>
                 {
                     b.Navigation("correctAnswers");
-                });
 
-            modelBuilder.Entity("Krzyzowka.Models.ClosedQuestion", b =>
-                {
                     b.Navigation("possibleAnswers");
                 });
 #pragma warning restore 612, 618

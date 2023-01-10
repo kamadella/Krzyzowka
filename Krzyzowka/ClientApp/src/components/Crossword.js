@@ -2,51 +2,20 @@ import React, { Component } from 'react';
 import Error from "./Error";
 import authService from './api-authorization/AuthorizeService';
 
-const questions = [  
-    {    
-        question: "Rok podpisania niepodległości USA?",    
-        type: "number",
-        correctAnswer: 1776,
-      },
-        {
-            question: "numer atomowy węgla?",
-            type: "number",
-            correctAnswer: 6,
-        },
-    {
-        question: "What is the capital of Australia?",
-        type: "radio",
-        answers: [
-          { id: "A", text: "Sydney", value: "A" },
-          { id: "B", text: "Melbourne", value: "B" },
-          { id: "C", text: "Perth", value: "C" },
-          { id: "D", text: "Canberra", value: "D" },
-        ],
-        correctAnswer: "D",
-      },
-    {
-        question: "Co to ciapąg?",
-        type: "text",
-        correctAnswers: [
-            "pociąg",
-            "ciuchcia"
-        ]
-    }
-];
-
-
 export class Crossword extends Component {
   constructor(props) {
     
     super(props);
 
     // Set up initial state
-    this.state = {
-      currentQuestionIndex: 0,
-      score: 0,
-      answerContainsNumbers: false, //czy odpwowiedz ma same litery
-      answerIsLowercase: false, //czy odpowiedz jest napisana malymi literami
-      answerContainsFormat: false
+      this.state = {
+          questions: [],
+          loading: true,
+          currentQuestionIndex: 0,
+          score: 0,
+          answerContainsNumbers: false, //czy odpwowiedz ma same litery
+          answerIsLowercase: false, //czy odpowiedz jest napisana malymi literami
+          answerContainsFormat: false
     };
 
      // Bind functions to the component instance
@@ -77,19 +46,20 @@ export class Crossword extends Component {
   // Function to handle when the user selects an answer
   handleAnswerSelected = event => {
     // Get the current question from the list of questions
-    const currentQuestion = questions[this.state.currentQuestionIndex];
+    const currentQuestion = this.state.questions[this.state.currentQuestionIndex];
 
     let isCorrect=false;
     // Check if the selected answer is correct
     switch(currentQuestion.type){
-        case "text":
-            isCorrect= currentQuestion.correctAnswers.includes(this.currentAnswer);
+        case 1:
+            isCorrect = false;
+            currentQuestion.correctAnswers.forEach(answer => { if (this.currentAnswer === answer.correctValue)  isCorrect = true;  })
         break;        
-        case "radio":
-            isCorrect= currentQuestion.correctAnswer === event.target.value;
+        case 2:
+            isCorrect = event.target.value === "true";
         break;
-        case "number":
-            isCorrect= currentQuestion.correctAnswer === Number(this.currentAnswer);
+        case 0:
+            isCorrect = currentQuestion.correctAnswers[0].correctValue === this.currentAnswer;
         break;
         default:
         break;
@@ -137,39 +107,47 @@ export class Crossword extends Component {
     
   } 
 
+    render() {
+        if (this.state.loading) {
+            return (
+                <div>
+                    <h1 id="tabelLabel" >Strona Quizu</h1>
+                    <p>Pobieranie pytań</p>
+                    <p><em>Loading...</em></p>
+                </div>
+            );
+        }
+        else {
+            const currentQuestion = this.state.questions[this.state.currentQuestionIndex];
 
+            return (
+                <div>
+                    {this.state.currentQuestionIndex < this.state.questions.length && (
+                        <Question
+                            question={currentQuestion.questionText}
+                            questionId={this.state.currentQuestionIndex}
+                            handleAnswerSelected={this.handleAnswerSelected}
+                        >
+                            {currentQuestion.type === 2 && (
+                                currentQuestion.possibleAnswers.map(answer => (
+                                    <AnswerSelect key={answer.id} answer={answer.answerText} value={answer.isCorrect} handleAnswerSelected={this.handleAnswerSelected} />
+                                ))
+                            )}
+                            {currentQuestion.type !== 2 && (
+                                <AnswerInput type={Text} questionId={this.state.currentQuestionIndex} handleChange={this.handleChange} handleAnswerSelected={this.handleAnswerSelected} to={this} />
+                            )}
+                        </Question>
+                    )}
 
+                    {this.state.currentQuestionIndex === this.state.questions.length && (
+                        <Result score={this.state.score} total={this.state.questions.length} resetQuiz={this.resetQuiz} />
+                    )}
+                </div>
+            );
+        }        
+    }
 
-  render() {
-    // Get the current question from the list of questions
-    const currentQuestion = questions[this.state.currentQuestionIndex];
-    return (
-      <div>
-        {/* If the quiz is not finished, display the current question */}
-        {this.state.currentQuestionIndex < questions.length && (
-          <Question
-            question={currentQuestion.question}
-            questionId={this.state.currentQuestionIndex}
-            handleAnswerSelected={this.handleAnswerSelected}
-          >
-            {currentQuestion.type==="radio" &&(
-                currentQuestion.answers.map(answer => (
-                <AnswerSelect key={answer.id} answer={answer.text} value={answer.value} handleAnswerSelected={this.handleAnswerSelected}/>
-                ))
-            )}
-            {currentQuestion.type!=="radio" &&(
-                <AnswerInput type={Text} questionId={this.state.currentQuestionIndex} handleChange={this.handleChange} handleAnswerSelected={this.handleAnswerSelected} to={this}/>
-            )}
-          </Question>
-        )}
-
-        {/* If the quiz is finished, display the results */}
-        {this.state.currentQuestionIndex === questions.length && (
-          <Result score={this.state.score} total={questions.length} resetQuiz={this.resetQuiz}/>
-        )}
-      </div>
-    );
-  }
+   
 
   async populateQuizData() {
       const token = await authService.getAccessToken();
@@ -178,7 +156,7 @@ export class Crossword extends Component {
 
       });
       const data = await response.json();
-      this.setState({ forecasts: data, loading: false });
+      this.setState({ questions: data, loading: false });
   }
 }
 

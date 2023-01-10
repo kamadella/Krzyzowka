@@ -9,7 +9,7 @@ namespace Krzyzowka.Models
         radio
     }
 
-    public abstract class Question
+    public class Question
     {
         [Key]
         [Required]
@@ -20,22 +20,10 @@ namespace Krzyzowka.Models
         public string questionText { get; set; } = null!;
         [Required]
         public List<CorrectAnswer> correctAnswers { get; set; } = new List<CorrectAnswer>();
-    }
-
-    public class OpenQuestion: Question
-    {
-
-    }
-
-    public class ClosedQuestion : Question
-    {
         [Required]
         [MinLength(2)]
         public List<PossibleAnswer> possibleAnswers { get; set; } = new List<PossibleAnswer>();
     }
-
-
-
 
     public class PossibleAnswer
     {
@@ -45,6 +33,8 @@ namespace Krzyzowka.Models
         public string answerText { get; set; } = null!;
         [Required]
         public bool isCorrect { get; set; }
+        [Required]
+        public int ClosedQuestionId { get; set; }
     }
 
     public class CorrectAnswer
@@ -53,6 +43,8 @@ namespace Krzyzowka.Models
         public int Id { get; set; }
         [Required]
         public string correctValue { get; set; } = null!;
+        [Required]
+        public int QuestionId { get; set; }
     }
 
 }
