@@ -13,9 +13,9 @@ export class Crossword extends Component {
           loading: true,
           currentQuestionIndex: 0,
           score: 0,
-          answerContainsNumbers: false, //czy odpwowiedz ma same litery
+          answerContainsNumbers: false, //czy odpwowiedz zawiera liczby
           answerIsLowercase: false, //czy odpowiedz jest napisana malymi literami
-          answerContainsFormat: false
+          answerContainsFormat: false // czy odpowiedz zawiera znaki specjalne
     };
 
      // Bind functions to the component instance
