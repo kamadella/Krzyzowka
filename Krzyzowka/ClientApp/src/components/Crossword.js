@@ -110,6 +110,7 @@ export class Crossword extends Component {
   validateAnswerData( event ){
     let data = event.target.value;
     var numbers = /[0-9]/;
+    // eslint-disable-next-line
     var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 
     //this.setState({ answerIsLowercase: true });
