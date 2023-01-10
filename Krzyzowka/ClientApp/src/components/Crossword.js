@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import Error from "./Error";
+import authService from './api-authorization/AuthorizeService';
 
 const questions = [  
     {    
-        question: "In which year was the Declaration of Independence signed?",    
+        question: "Rok podpisania niepodległości USA?",    
         type: "number",
         correctAnswer: 1776,
       },
         {
-            question: "What is the atomic number of carbon?",
+            question: "numer atomowy węgla?",
             type: "number",
             correctAnswer: 6,
         },
@@ -51,7 +52,11 @@ export class Crossword extends Component {
      // Bind functions to the component instance
     this.resetQuiz = this.resetQuiz.bind(this);
   }
-  
+
+    componentDidMount() {
+        this.populateQuizData();
+    }
+
   currentAnswer="";
 
 
@@ -164,9 +169,19 @@ export class Crossword extends Component {
       </div>
     );
   }
+
+  async populateQuizData() {
+      const token = await authService.getAccessToken();
+      const response = await fetch('quiz', {
+          headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
+
+      });
+      const data = await response.json();
+      this.setState({ forecasts: data, loading: false });
+  }
 }
 
-function Question({ question, questionId, children, handleAnswerSelected }) {
+function Question({ question, questionId, children }) {
   return (
     <div class="bg-light p-5 rounded">
       <h2>{questionId+1}. Pytanie</h2>
