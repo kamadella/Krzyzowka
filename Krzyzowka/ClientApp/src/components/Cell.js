@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import "../styles/cell.css";
 
 export default class Cell extends Component {
     constructor(props) {
@@ -56,19 +55,18 @@ export default class Cell extends Component {
                 y={y}
                 width="9"
                 height="9"
-                className={this.state.editing ? "input current" : "input"}
+                className={this.state.editing ? "input_current" : "input"}
             >
-                <div>
-                    <input
+                <div class="input_crossword">
+                    <input 
                         ref={this.props.value}
                         onFocus={this.handleFocus}
                         onBlur={this.handleBlur}
                         onChange={this.handleChange}
                         value={this.state.inputVal}
-                        className={
-                            this.state.editing ? "input current" : "input"
-                        }
+                        className={this.state.editing ? "input_current" : "input"}
                         maxLength="1"
+                        
                     />
                 </div>
             </foreignObject>
@@ -97,6 +95,7 @@ export default class Cell extends Component {
                         className="heavy"
                         dominantBaseline="middle"
                         textAnchor="middle"
+                        
                     >
                         {this.props.value} 
                     </text>

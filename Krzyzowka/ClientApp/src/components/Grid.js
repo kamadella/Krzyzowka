@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import "../styles/cell.css";
 import Word from "./Word";
 import Cell from "./Cell";
 
@@ -9,9 +8,36 @@ export default class Grid extends Component {
         super(props);
         this.state = {
             grid: [],
-            solvedGrid: [],
+            solvedWords: [],
+            words: [],
+            wordsLoaded: true,
             currentWord: null
         };
+    }
+
+    componentDidUpdate() {
+        if (
+            this.state.wordsLoaded &&
+            this.props.data.numberOfWords === this.props.data.wordList.length
+        ) {
+            const words = this.props.data.wordList.map((word, index) => (
+                <Word
+                    number={index}
+                    word={word.word}
+                    x={word.x}
+                    y={word.y}
+                    orientation={word.orientation}
+                    key={Math.random()}
+                    onClick={this.handleWordClick}
+                    wordChange={this.handleWordChange}
+                />
+            ));
+
+            this.setState(
+                { wordsLoaded: false, words: words },
+                console.log(words)
+            );
+        }
     }
 
     componentDidMount() {
@@ -38,29 +64,20 @@ export default class Grid extends Component {
 
     
             
-    handleWordChange = () => {
-        console.log("handle word change");
+    handleWordChange = (word) => {
+        this.setState(
+            { solvedWords: this.state.solvedWords.concat(word) },
+            () => {
+                console.log(word);
+                this.props.addSolvedWord(this.state.solvedWords);
+            }
+        );
     };
 
     render() {
         // to wielkosc calej planszy w sensie jak duza jest wyswietlana
         const dim =" 0 0 " + (10 * this.props.data.width + 3) + " " + (10 * this.props.data.height + 3); 
         // to tworzymy komórki na uzupelnianie hasla
-        const words = this.props.data.wordList.map((word, index) => {
-            return (
-                <Word
-                    number={index}
-                    word={word.word}
-                    x={word.x}
-                    y={word.y}
-                    orientation={word.orientation}
-                    key={Math.random()}
-                    onClick={this.handleWordClick}
-                    wordChange={this.handleWordChange}
-                />
-            );
-        });
-
         return (
             <div>
                 <svg
@@ -72,8 +89,8 @@ export default class Grid extends Component {
                         // How did props get here?
                     })}
                 >
-                {this.state.grid} {/* czarne komórki */}
-                {words} {/* komórki do wpisywania */}
+                    {this.state.grid}
+                    {this.state.words}
                 </svg>
             </div>
         );

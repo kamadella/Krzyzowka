@@ -60,13 +60,52 @@ export class Crossword extends Component {
                 "Co to świat?", 
                 "Co to świat?", 
                 "Co to świat?" 
-            ]
+            ],
+            answers: [
+              "Word",
+              "consolidate",
+              "shift",
+              "ice",
+              "truce",
+              "relish"
+            ],
+            attempts: [],
+            numberOfWords: 6
         }
     };
 }
 
+addSolvedWord = (word) => {
+  this.setState(
+      (prevState) => ({
+          data: { ...this.state.data, attempts: word }
+      }),
+      console.log("Added attempt ", word)
+  );
+};
+
 checkAnswers = () => {
-    console.log("check answers");
+  const { attempts, answers } = this.state.data;
+  console.log(attempts, answers);
+  let score = 0;
+
+  if (attempts.length === answers.length) {
+      attempts.forEach((attempt, index) => {
+          if (answers.includes(attempts[index])) {
+              score += 1;
+          }
+      });
+
+      if (score === answers.length) {
+        console.log("Correct!");
+      } else {
+        console.log("Incorrect!");
+      }
+  } else {
+      console.log(
+          "Please answer all " + attempts.length + " of " + answers.length
+      );
+  }
 };
 
 
@@ -80,7 +119,8 @@ render() {
     if (this.state.data.wordList.length > 0) {
         return (
             <React.Fragment>
-                <Grid data={this.state.data}></Grid>
+                <Grid data={this.state.data} addSolvedWord={this.addSolvedWord}>
+                </Grid>
                 {this.state.data.clues.map((clue) => {
                     return (
                         <li key={clue} onClick={this.checkAnswers}>
