@@ -6,7 +6,8 @@ export default class Word extends Component {
         super(props);
         this.state = {
             solution: this.props.word,
-            solved: ""
+            solved: "",
+            editing: false
         };
     }
 
@@ -16,8 +17,19 @@ export default class Word extends Component {
         }
     }
 
-    handleWordClick = (e) => {
-        this.setState({ solved: this.state.solved + e }, () => console.log(e));
+    handleWordChange = (e) => {
+        this.setState(
+            { solved: this.state.solved + e, editing: !this.state.editing },
+            () => console.log(e)
+        );
+    };
+
+    onWordFocus = () => {
+        this.setState({ editing: true });
+    };
+
+    onWordUnfocus = () => {
+        this.setState({ editing: false });
     };
     
     render() {
@@ -26,6 +38,7 @@ export default class Word extends Component {
             return (
                 <React.Fragment key={Math.random()}>
                     <Cell
+                        wordEditing={this.state.editing}
                         orientation={this.props.orientation}
                         number={index === 0 ? this.props.number + 1 : null}
                         x={
@@ -39,7 +52,9 @@ export default class Word extends Component {
                                 : this.props.y
                         }
                         value={this.state.solved[index]}
-                        onClick={this.handleWordClick}
+                        onWordChange={this.handleWordChange}
+                        onWordFocus={this.onWordFocus}
+                        onWordUnfocus={this.onWordUnfocus}
                     />
                 </React.Fragment>
             );

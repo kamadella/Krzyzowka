@@ -44,6 +44,12 @@ code {
   border: 1px solid red;
 }
 
+.input_crossword{
+  border: none;
+  padding: 0px;
+  width: 10px;
+  height: 10px;
+}
 
 
 /*           KONIEC    KRZYŻÓWKA           */

@@ -11,19 +11,28 @@ export default class Cell extends Component {
     }
 
     handleFocus = () => {
-        this.setState({ editing: !this.state.editing });
+        this.setState(
+            { editing: !this.state.editing },
+            this.props.onWordFocus()
+        );
     };
 
     handleBlur = () => {
         this.setState({ editing: !this.state.editing });
         if (this.props.value === "") {
-            this.setState({ value: this.props.value, solved: false });
+            this.setState(
+                { value: this.props.value, solved: false },
+                this.props.onWordUnfocus()
+            );
         }
     };
 
     handleChange = (e) => {
         if (e.target.value !== "") {
-            this.setState({ solved: true }, this.props.onClick(e.target.value));
+            this.setState(
+                { solved: true },
+                this.props.handleWordChange(e.target.value)
+            );
         }
     };
 
@@ -37,6 +46,9 @@ export default class Cell extends Component {
             ? "rgb(255,255,153)"  //żółty
             : "rgb(200, 200, 200)"; //szary
 
+        const wordEditing = this.props.wordEditing
+            ? "rgb(255,255,153)"
+            : "rgb(10, 10, 10)";
         //skomplikowane wyliczenia zeby komorki ladnie sie wyswietlaly
         const x =
             this.props.x === 1
@@ -57,7 +69,7 @@ export default class Cell extends Component {
                 height="9"
                 className={this.state.editing ? "input_current" : "input"}
             >
-                <div class="input_crossword">
+                <div >
                     <input 
                         ref={this.props.value}
                         onFocus={this.handleFocus}
@@ -66,7 +78,6 @@ export default class Cell extends Component {
                         value={this.state.inputVal}
                         className={this.state.editing ? "input_current" : "input"}
                         maxLength="1"
-                        
                     />
                 </div>
             </foreignObject>
@@ -81,7 +92,7 @@ export default class Cell extends Component {
                         width={10}
                         height={10}
                         style={{
-                            fill: style,
+                            fill: this.props.wordEditing ? wordEditing : style,
                             strokeWidth: "0.5px",
                             stroke: "black"
                         }}
