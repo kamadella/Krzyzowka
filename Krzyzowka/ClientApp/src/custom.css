@@ -50,6 +50,13 @@ code {
   width: 10px;
   height: 10px;
 }
+.input{
+  background-color: transparent;
+  font-size: 8px;
+  border: 0;
+  padding: 2px;
+  text-transform: uppercase;
+}
 
 
 /*           KONIEC    KRZYŻÓWKA           */

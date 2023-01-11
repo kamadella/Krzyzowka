@@ -6,15 +6,14 @@ export default class Cell extends Component {
         this.state = { 
             editing: false,
             inputVal: "",
-            solved: false
+            solved: false,
+            value: "",
+            wordSolved: false
         };
     }
 
     handleFocus = () => {
-        this.setState(
-            { editing: !this.state.editing },
-            this.props.onWordFocus()
-        );
+        this.setState({ editing: !this.state.editing });
     };
 
     handleBlur = () => {
@@ -28,10 +27,16 @@ export default class Cell extends Component {
     };
 
     handleChange = (e) => {
-        if (e.target.value !== "") {
+        let { index, wordNum } = this.props;
+        let value = e.target.value;
+
+        if (value !== "") {
             this.setState(
-                { solved: true },
-                this.props.handleWordChange(e.target.value)
+                {
+                    solved: true,
+                    value: value
+                },
+                this.props.onWordChange({ value, index, wordNum })
             );
         }
     };
@@ -68,7 +73,7 @@ export default class Cell extends Component {
                 width="9"
                 height="9"
                 className={this.state.editing ? "input_current" : "input"}
-            >
+            >  
                 <div >
                     <input 
                         ref={this.props.value}
@@ -93,7 +98,7 @@ export default class Cell extends Component {
                         height={10}
                         style={{
                             fill: this.props.wordEditing ? wordEditing : style,
-                            strokeWidth: "0.5px",
+                            strokeWidth: "0.4px",
                             stroke: "black"
                         }}
                     />
@@ -108,7 +113,7 @@ export default class Cell extends Component {
                         textAnchor="middle"
                         
                     >
-                        {this.props.value} 
+                        {this.state.value} 
                     </text>
                 </g>
                 {this.props.value === "" ? null : input}
