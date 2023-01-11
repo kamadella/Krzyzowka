@@ -69,8 +69,9 @@ export class Crossword extends Component {
               "truce",
               "relish"
             ],
-            attempts: ["sdfdfs", "dffd", "dfsd", "dfdsfdf","dsffdsfds","fdfsdfd"],
-            numberOfWords: 6
+            attempts: [],
+            numberOfWords: 6,
+            refs: [React.createRef(),React.createRef(),React.createRef(),React.createRef(),React.createRef(),React.createRef()]
         }
     };
 }
@@ -109,6 +110,10 @@ checkAnswers = () => {
   }
 };
 
+handleClueClick = (e, index) => {
+  this.state.data.refs[index].current.focus();
+  console.log(this.state.data.refs);
+};
 
 render() {
     //return (
@@ -122,11 +127,17 @@ render() {
             <React.Fragment>
                 <Grid data={this.state.data} addSolvedWord={this.addSolvedWord}>
                 </Grid>
-                {this.state.data.clues.map((clue) => {
+                {this.state.data.clues.map((clue, index) => {
                     return (
-                        <li key={clue} onClick={this.checkAnswers}>
-                            {clue}
-                        </li>
+                      <div className="clue" key={clue}>
+                      <li
+                          onClick={(e) =>
+                              this.handleClueClick(e, index)
+                          }
+                      >
+                          {clue}
+                      </li>
+                  </div>
                     );
                 })}
                 <button onClick={this.checkAnswers}>Check answers</button>

@@ -40,6 +40,8 @@ export default class Word extends Component {
                                 : this.props.y
                         }
                         onWordChange={this.handleWordChange}
+                        refer={this.props.refer}
+                        id={this.props.word}
                     />
                 </React.Fragment>
             );
