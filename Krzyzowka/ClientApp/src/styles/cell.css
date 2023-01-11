@@ -3,12 +3,6 @@
     /*use a variable*/
 }
 
-*:focus {
-    font-size: 8px;
-    border: 0;
-    padding: 2px;
-    text-transform: uppercase;
-}
 
 .word {
     border: 1px solid red;
@@ -31,3 +25,4 @@
 .cell {
     border: 1px solid red;
 }
+

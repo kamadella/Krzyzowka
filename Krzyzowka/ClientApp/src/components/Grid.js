@@ -9,11 +9,12 @@ export default class Grid extends Component {
         super(props);
         this.state = {
             grid: [],
+            solvedGrid: [],
             currentWord: null
         };
     }
 
-    populate() {
+    componentDidMount() {
         let width = this.props.data.width; //ile komorek na wysokosc
         let height = this.props.data.height;
         let newGrid = [];
@@ -28,16 +29,18 @@ export default class Grid extends Component {
         this.setState({ grid: newGrid }); //tu ustalam cały grid komórek
     }
 
-    componentDidMount() {
-        this.populate();
-    }
+
 
     classNames = (props) =>
         Object.keys(props)
             .filter((f) => props[f] === true)
             .join(" ");
 
-    handleWordClick = () => {};
+    
+            
+    handleWordChange = () => {
+        console.log("handle word change");
+    };
 
     render() {
         // to wielkosc calej planszy w sensie jak duza jest wyswietlana
@@ -53,6 +56,7 @@ export default class Grid extends Component {
                     orientation={word.orientation}
                     key={Math.random()}
                     onClick={this.handleWordClick}
+                    wordChange={this.handleWordChange}
                 />
             );
         });

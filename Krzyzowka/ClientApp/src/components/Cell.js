@@ -5,24 +5,26 @@ export default class Cell extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            editing: false, 
-            value: props.value, 
-            inputVal: "" 
+            editing: false,
+            inputVal: "",
+            solved: false
         };
     }
 
     handleFocus = () => {
-        this.setState({ editing: !this.state.editing, value: "" });
+        this.setState({ editing: !this.state.editing });
     };
 
     handleBlur = () => {
         this.setState({ editing: !this.state.editing });
+        if (this.props.value === "") {
+            this.setState({ value: this.props.value, solved: false });
+        }
     };
 
     handleChange = (e) => {
         if (e.target.value !== "") {
-            console.log(e.target.value);
-            this.setState({ value: e.target.value });
+            this.setState({ solved: true }, this.props.onClick(e.target.value));
         }
     };
 
@@ -30,9 +32,9 @@ export default class Cell extends Component {
         //(status = age >= 18 ? 'adult' : 'minor';)
         const style = this.state.editing
             ? "rgb(255,255,153)" //żółty
-            : this.state.value === ""
+            : this.props.value === ""
             ? "rgb(10, 10, 10)" //czarny
-            : this.state.editing
+            : this.props.editing
             ? "rgb(255,255,153)"  //żółty
             : "rgb(200, 200, 200)"; //szary
 
@@ -96,7 +98,7 @@ export default class Cell extends Component {
                         dominantBaseline="middle"
                         textAnchor="middle"
                     >
-                        {this.state.value} 
+                        {this.props.value} 
                     </text>
                 </g>
                 {this.props.value === "" ? null : input}
