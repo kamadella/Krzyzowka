@@ -55,11 +55,11 @@ export class Crossword extends Component {
             ],
             clues: [ 
                 "Co to świat?",
-                "Co to świat?", 
-                "Co to świat?", 
-                "Co to świat?", 
-                "Co to świat?", 
-                "Co to świat?" 
+                "długie łsowo?", 
+                "ctr + + delete?", 
+                "zimne?", 
+                "coś?", 
+                "pasujem?" 
             ],
             answers: [
               "Word",
@@ -69,13 +69,14 @@ export class Crossword extends Component {
               "truce",
               "relish"
             ],
-            attempts: [],
+            attempts: ["sdfdfs", "dffd", "dfsd", "dfdsfdf","dsffdsfds","fdfsdfd"],
             numberOfWords: 6
         }
     };
 }
 
 addSolvedWord = (word) => {
+  console.log("here ", word);
   this.setState(
       (prevState) => ({
           data: { ...this.state.data, attempts: word }
