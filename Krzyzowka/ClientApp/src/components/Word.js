@@ -18,9 +18,10 @@ export default class Word extends Component {
     componentDidMount() {
         let cells = [];
         const splitWord = this.props.word.split("");
+
         splitWord.forEach((element, index) => {
             cells.push(
-                <React.Fragment key={Math.random()}>
+                <React.Fragment key={this.props.word + index}>
                     <Cell
                         index={index}
                         word={this.props.word}
@@ -42,11 +43,13 @@ export default class Word extends Component {
                         onWordChange={this.handleWordChange}
                         refer={this.props.refer}
                         id={this.props.word}
+                        addToRefs={this.props.addToRefs}
+                        moveToNextCell={this.props.moveToNextCell}
+                        changeActiveCell={this.props.changeActiveCell}
                     />
                 </React.Fragment>
             );
         });
-
 
         this.setState({ cells: cells });
     }
@@ -61,13 +64,13 @@ export default class Word extends Component {
         }
     }
 
+    addToRefs = (ref) => {
+        this.props.addToRefs(ref);
+    };
 
     handleWordChange = (tuple) => {
         let { tuples, indices, solved } = this.state;
-
-        // IF TUPLE.INDEX IS NON EMPTY, CHANGE IT (EDIT STATE.TUPLE)
         if (this.state.indices.indexOf(tuple.index) === -1) {
-            // console.log(this.state.tuples.length, solution.length);
             this.setState(
                 {
                     tuples: [...tuples, tuple],
@@ -76,25 +79,16 @@ export default class Word extends Component {
                 this.setState({ solved: [...solved, tuple.value] })
             );
         } else {
-            // console.log(this.state.tuples.length, solution.length);
-            // console.log(
-            //     `replacing ${tuples[tuple.index].value} with ${tuple.value}`
-            // );
-
             tuples[tuple.index].value = tuple.value;
             solved[tuple.index] = tuple.value;
-
             this.setState(
                 { tuples: tuples, solved: solved },
                 console.log("index edited", tuples[tuple.index])
             );
-
         }
     };
-
 
     render() {
         return this.state.cells;
     }
-    
 }

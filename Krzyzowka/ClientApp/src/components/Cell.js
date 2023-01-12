@@ -14,16 +14,31 @@ export default class Cell extends Component {
         this.cellRef = React.createRef();
     }
 
+    componentDidUpdate() {
+        if (this.state.value !== "") {
+        }
+    }
+
+    componentDidMount() {
+        if (typeof this.props.addToRefs === "function") {
+            this.props.addToRefs(this.cellRef);
+        }
+    }
+
     handleFocus = () => {
         this.setState({ editing: !this.state.editing });
+        this.props.changeActiveCell({
+            index: this.props.index,
+            wordNum: this.props.wordNum
+        });
     };
 
     handleBlur = () => {
         this.setState({ editing: !this.state.editing });
         if (this.props.value === "") {
             this.setState(
-                { value: this.props.value, solved: false },
-                this.props.onWordUnfocus()
+                { value: this.props.value, solved: false }
+                // this.props.onWordUnfocus()
             );
         }
     };
@@ -41,6 +56,7 @@ export default class Cell extends Component {
                 this.props.onWordChange({ value, index, wordNum })
             );
         }
+        this.props.moveToNextCell();
     };
 
     render() {
@@ -85,8 +101,7 @@ export default class Cell extends Component {
                         value={this.state.inputVal}
                         className={this.state.editing ? "input_current" : "input"}
                         maxLength="1"
-                        ref={this.props.index === 0 ? this.props.refer : null}
-                        id={this.props.index + this.props.word}
+                        ref={this.cellRef}
                     />
                 </div>
             </foreignObject>
