@@ -15,14 +15,14 @@ export class Crossword extends Component {
                     orientation: "down",
                     x: 2,
                     y: 1,
-                    length: 5
+                    length: 4
                 },
                 {
                     word: "consolidate",
                     orientation: "across",
                     x: 1,
                     y: 2,
-                    length: 5
+                    length: 11
                 },
                 {
                     word: "shift",
@@ -36,7 +36,7 @@ export class Crossword extends Component {
                     orientation: "across",
                     x: 4,
                     y: 4,
-                    length: 5
+                    length: 3
                 },
                 {
                     word: "truce",
@@ -50,7 +50,7 @@ export class Crossword extends Component {
                     orientation: "down",
                     x: 9,
                     y: 5,
-                    length: 5
+                    length: 6
                 }
             ],
             clues: [ 
@@ -78,14 +78,17 @@ export class Crossword extends Component {
     };
 }
 
-addSolvedWord = (word) => {
-  console.log("here ", word);
-  this.setState(
-      (prevState) => ({
-          data: { ...this.state.data, attempts: word }
-      }),
-      console.log("Added attempt ", word)
-  );
+addSolvedWord = (tuple) => {
+  
+    let wordToAdd = tuple.words[tuple.number]
+    ? tuple.words[tuple.number]
+    : tuple.words[0];
+
+    console.log("CWaddSolvedWord", {
+        word: wordToAdd,
+        number: tuple.number
+    });
+
 };
 
 checkAnswers = () => {
@@ -139,31 +142,29 @@ moveToNextCell = (backwards) => {
     //here we will just call changeActiveCell with parameters in a
     //loop
 
-    const { currentWord, currentFocus } = this.state.data;
-    let curWordLength = this.state.data.wordList[currentWord].length;
+    const { currentFocus, refs } = this.state.data;
+    let nextCell = 0;
 
-    if (currentFocus < curWordLength) {
-        console.log("move to next cell", currentWord, currentFocus);
+        if (currentFocus < refs.length - 1) {
+            if (backwards) {
+                nextCell = currentFocus === 0 ? 0 : currentFocus - 1;
+            } else {
+                nextCell = currentFocus + 1;
+            }
+
+            this.setState(
+                { currentFocus: nextCell },
+                this.state.data.refs[nextCell].current.focus()
+            );
+        } else {
+            nextCell = 0;
+            this.setState(
+                { currentFocus: nextCell },
+                this.state.data.refs[nextCell].current.focus()
+            );
     }
 
-    // this.changeActiveCell({ index: 0, wordNum: 0 });
-
-    // let { currentFocus } = this.state.data;
-    // if (this.state.data.currentFocus < this.state.data.refs.length - 1) {
-    //     console.log(
-    //         this.state.data.currentFocus,
-    //         this.state.data.refs.length
-    //     );
-
-    //     const nextCell = (this.state.data.currentFocus += 1);
-
-    //     this.setState(
-    //         { currentFocus: nextCell },
-    //         this.state.data.refs[nextCell].current.focus()
-    //     );
-    // } else {
-    //     this.setState({ currentFocus: 0 });
-    // }
+    
 };
 
 changeActiveCell = (activeCell) => {
