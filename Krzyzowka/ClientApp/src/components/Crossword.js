@@ -235,25 +235,16 @@ export class Crossword extends Component {
         const { currentFocus, refs } = this.state.data;
         let nextCell = 0;
 
-        if (currentFocus < refs.length - 1) {
-            if (backwards) {
-                nextCell = currentFocus === 0 ? 0 : currentFocus - 1;
-            } else {
-                nextCell = currentFocus + 1;
-            }
-
-            this.setState(
-               { currentFocus: nextCell },
-                this.state.data.refs[nextCell].current.focus()
-                );
-            } else {
-                nextCell = 0;
-                this.setState(
-                    { currentFocus: nextCell },
-                    this.state.data.refs[nextCell].current.focus()
-                );
+        if (backwards) {
+            nextCell = currentFocus === 0 ? (refs.length - 1) : (currentFocus - 1);
+        } else {
+            nextCell = (currentFocus < refs.length - 1) ? currentFocus + 1 : 0;
         }
 
+        this.setState(
+            { currentFocus: nextCell },
+            this.state.data.refs[nextCell].current.focus()
+        );
         
     };
 

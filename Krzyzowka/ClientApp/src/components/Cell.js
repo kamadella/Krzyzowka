@@ -61,6 +61,15 @@ export default class Cell extends Component {
         }
     };
 
+    handleKeyDown = (e) => {
+        if(e.keyCode === 39 || e.keyCode === 40){
+            this.props.moveToNextCell(false);
+        }
+        else if(e.keyCode === 37 || e.keyCode === 38){
+            this.props.moveToNextCell(true);
+        }
+    }
+
     render() {
         //(status = age >= 18 ? 'adult' : 'minor';)
         const style =
@@ -96,6 +105,7 @@ export default class Cell extends Component {
                         onFocus={this.handleFocus}
                         onBlur={this.handleBlur}
                         onChange={this.handleChange}
+                        onKeyDown={this.handleKeyDown}
                         value={this.state.inputVal}
                         className={"input"}
                         maxLength="1"
