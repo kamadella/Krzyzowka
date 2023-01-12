@@ -61,7 +61,7 @@ code {
 }
 
 .clue {
-  padding: 5px;
+  font-size: 24px;
 }
 
 .clue:hover {
@@ -74,4 +74,7 @@ code {
   background-color: yellow;
 }
 
+li {
+  margin-left: 10px;
+}
 /*           KONIEC    KRZYŻÓWKA           */

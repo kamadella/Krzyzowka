@@ -46,21 +46,38 @@ export default class Word extends Component {
                         addToRefs={this.props.addToRefs}
                         moveToNextCell={this.props.moveToNextCell}
                         changeActiveCell={this.props.changeActiveCell}
+                        currentWord={this.props.currentWord}
                     />
                 </React.Fragment>
             );
         });
 
-        this.setState({ cells: cells });
+        this.setState({ cells: cells, currentWord: this.props.currentWord });
     }
 
     componentDidUpdate() {
+        console.log(
+            "WCDU",
+            this.props.currentWord === this.props.number,
+            this.props.currentWord,
+            this.props.number
+        );
+
         const { solved, solution } = this.state;
         if (this.state.solved.length === solution.length) {
-            this.props.wordChange({
-                value: solved,
-                number: this.props.number
-            });
+            this.props.wordChange(
+                {
+                    value: solved,
+                    number: this.props.number,
+                    currentWord: this.props.currentWord
+                },
+                console.log(
+                    "WCDU -->",
+                    this.props.currentWord === this.props.number,
+                    this.props.currentWord,
+                    this.props.number
+                )
+            );
         }
     }
 
@@ -97,7 +114,7 @@ export default class Word extends Component {
         }
         this.props.moveToNextCell();
     };
-    
+
 
     render() {
         return this.state.cells;

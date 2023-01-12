@@ -10,16 +10,25 @@ export default class Grid extends Component {
             grid: [],
             solvedWords: [],
             words: [],
-            wordsLoaded: true,
-            currentWord: null
+            wordsLoaded: false,
+            currentWord: this.props.currentWord
         };
     }
 
     componentDidUpdate() {
+        if (this.props.currentWord !== this.state.currentWord) {
+            this.setState(
+                { currentWord: this.props.currentWord },
+                console.log("GcDu", this.state.currentWord)
+            );
+
+            // this.props.handleNewCurrentWord(this.props.currentWord);
+        }
         if (
-            this.state.wordsLoaded &&
+            !this.state.wordsLoaded &&
             this.props.data.numberOfWords === this.props.data.wordList.length
         ) {
+            console.log("GCDU", this.props.currentWord);
             const words = this.props.data.wordList.map((word, index) => (
                 <Word
                     refer={this.props.data.refs[index]}
@@ -28,15 +37,16 @@ export default class Grid extends Component {
                     x={word.x}
                     y={word.y}
                     orientation={word.orientation}
-                    key={Math.random()}
+                    key={word.word}
                     wordChange={this.handleWordChange}
                     addToRefs={this.props.addToRefs}
                     moveToNextCell={this.props.moveToNextCell}
                     changeActiveCell={this.props.changeActiveCell}
+                    currentWord={this.state.currentWord}
                 />
             ));
 
-            this.setState({ wordsLoaded: false, words: words });
+            this.setState({ wordsLoaded: true, words: words });
         }
     }
 
@@ -69,7 +79,10 @@ export default class Grid extends Component {
 
         console.log("GhandleWordChange", tuple.number, word);
 
-        this.props.addSolvedWord({ word: word, number: tuple.number });
+        this.props.addSolvedWord(
+            { word: word, number: tuple.number },
+            this.props.handleNewCurrentWord(this.props.currentWord)
+        );
 
     };
 
