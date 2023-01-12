@@ -150,15 +150,11 @@ export class Crossword extends Component {
     };
 
 
-    checkThis = () => {
-        console.log("checkthis");
-    };
-
-
     checkAnswers = () => {
     const { attempts, answers } = this.state.data;
-    
+        let score = 0;
         // sortedAnswers
+        /*
         let sa = attempts.slice(0);
 
         sa.sort((a, b) => {
@@ -168,7 +164,8 @@ export class Crossword extends Component {
         
         let score = 0;
         let newAttempts = sa;
-
+        console.log(attempts);
+        
         if (newAttempts.length === answers.length) {
             newAttempts.forEach((attempt, index) => {
                 if ( answers[attempt.number].word === attempt.word && answers[index].number === attempt.number ) {
@@ -182,8 +179,21 @@ export class Crossword extends Component {
                 console.log("przykro mi masz błąd!");
             }
         } else {
+
             console.log("Sorka ale musisz odpowiedziec na wszystko na razie masz: " + attempts.length + " na " + answers.length);
         }
+        */
+
+        attempts.forEach((attempt) => {
+            if ( answers[attempt.number].word === attempt.word) {
+                score += 1;
+            }
+            else {
+                console.log("zła odpowiedz: " + attempt.word + " poprawna to: " + answers[attempt.number].word);
+            }
+            
+        });
+        console.log("zdobyłeś punktów: " + score + " na " + answers.length);
     };
 
 
@@ -301,7 +311,6 @@ export class Crossword extends Component {
                     changeActiveCell={this.changeActiveCell}
                     currentWord={this.state.data.currentWord}
                     handleNewCurrentWord={this.handleNewCurrentWord}
-                    checkCurrentWord={this.checkThis}
                     ></Grid>
                     {this.state.data.clues.map((clue, index) => {
                         return (
@@ -313,8 +322,7 @@ export class Crossword extends Component {
                         );
                     })}
                     <div className="buttons">
-                        <button className="button" onClick={this.checkThis}>Sprawdź to</button>
-                        <button className="button" onClick={this.checkAnswers}>Sprawdź wszystko</button>
+                        <button className="button" onClick={this.checkAnswers}>Sprawdź</button>
                         <button className="button" onClick={this.loser}>Poddaj się</button>
                     </div>
                 </div>
