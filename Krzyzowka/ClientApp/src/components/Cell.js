@@ -13,6 +13,20 @@ export default class Cell extends Component {
     }
 
 
+    componentDidUpdate(prevProps) {
+        // console.log("Cell-componentDidUpdate", this.props.clearAll);
+        if (this.props !== prevProps) {
+            if (
+                this.props.clear === this.props.wordNum &&
+                this.state.value !== ""
+            ) {
+                this.setState({ value: "" });
+                this.props.deleteClearedWord(this.props.clear);
+            }
+        }
+    }
+
+
     componentDidMount() {
         if (typeof this.props.addToRefs === "function") {
             this.props.addToRefs(this.cellRef);
@@ -21,21 +35,17 @@ export default class Cell extends Component {
 
     handleFocus = () => {
         if (this.props.value !== "-") {
-            this.setState({ editing: !this.state.editing });
-            this.props.changeActiveCell(
-                {
-                    index: this.props.index,
-                    wordNum: this.props.wordNum,
-                    currentWord: this.props.wordNum
-                },
-                console.log()
-            );
+            this.props.changeActiveCell({
+                index: this.props.index,
+                wordNum: this.props.wordNum,
+                currentWord: this.props.wordNum
+            });
         }
     };
 
-    handleBlur = () => {
-        this.setState({ editing: !this.state.editing });
-    };
+    //handleBlur = () => {
+    //    this.setState({ editing: !this.state.editing });
+    //};
 
     handleChange = (e) => {
         let { index, wordNum } = this.props;
@@ -57,8 +67,9 @@ export default class Cell extends Component {
             this.props.value === "-"
                 ? "rgba(0, 0, 0, 0.85)"
                 : this.props.currentWord === this.props.wordNum
-                ? "rgb(200,200,0)"
-                : "rgb(200, 200, 200)";
+                ? "rgb(255,192,203)"
+                : "rgba(255, 255, 255, 0.85)";
+
         //skomplikowane wyliczenia zeby komorki ladnie sie wyswietlaly
         const x =
             this.props.x === 1
@@ -122,7 +133,7 @@ export default class Cell extends Component {
                         {this.state.value} 
                     </text>
                 </g>
-                {this.props.value === "" ? null : input}
+                {this.props.value === "-" ? null : input}
             </svg>
         );
     }

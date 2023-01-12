@@ -111,7 +111,6 @@ export class Crossword extends Component {
 
         if ( attempts.length !== 0) {
             if (answeredIndices.includes(tuple.number)) {
-                //[0,2,3], tuple.number===2
                 attempts[answeredIndices.indexOf(tuple.number)].word =
                     tuple.word;
 
@@ -122,7 +121,7 @@ export class Crossword extends Component {
                             attempts: attempts
                         }
                     }),
-                    console.log("Edited attempt ", tuple)
+                    console.log("Edytowano slowo ", tuple)
                 );
             } else {
                 //add an attempt
@@ -133,7 +132,7 @@ export class Crossword extends Component {
                             attempts: [...this.state.data.attempts, tuple]
                         }
                     }),
-                    console.log("Added attempt ", tuple)
+                    console.log("Dodano slowo ", tuple)
                 );
             }
         } else {
@@ -178,14 +177,12 @@ export class Crossword extends Component {
             });
 
             if (score === answers.length) {
-                console.log("Correct!");
+                console.log("Brawo wszystkie odgadłeś!");
             } else {
-                console.log("Incorrect!");
+                console.log("przykro mi masz błąd!");
             }
         } else {
-            console.log(
-                "Please answer all " + attempts.length + " of " + answers.length
-            );
+            console.log("Sorka ale musisz odpowiedziec na wszystko na razie masz: " + attempts.length + " na " + answers.length);
         }
     };
 
@@ -305,8 +302,6 @@ export class Crossword extends Component {
                     currentWord={this.state.data.currentWord}
                     handleNewCurrentWord={this.handleNewCurrentWord}
                     checkCurrentWord={this.checkThis}
-                    clearCurrentWord={this.clearThis}
-                    clearAllWords={this.clearEverything}
                     ></Grid>
                     {this.state.data.clues.map((clue, index) => {
                         return (

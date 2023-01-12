@@ -7,11 +7,8 @@ export default class Word extends Component {
         this.state = {
             solution: this.props.word,
             solved: [],
-            tuples: [],
             indices: [],
             cells: [],
-            editing: this.props.currentWord === this.props.index,
-            value: " ",
             currentWord: null
         };
     }
@@ -66,7 +63,6 @@ export default class Word extends Component {
                         <Cell
                             currentWord={this.props.currentWord}
                             answer={this.props.word[index]}
-                            value={this.state.tuples}
                             index={index}
                             number={index === 0 ? this.props.number + 1 : null}
                             wordNum={this.props.number}
@@ -122,23 +118,18 @@ export default class Word extends Component {
 
         if (this.state.indices.indexOf(tuple.index) === -1) {
             //if incoming indice is empty
-            this.setState(
-                {
-                    tuples: [...tuples, tuple],
-                    indices: [...indices, tuple.index]
-                },
-                this.setState({
-                    solved: [...solved, tuple]
-                })
-            );
+            this.setState({
+                solved: [...solved, tuple],
+                indices: [...indices, tuple.index]
+            });
         } else {
             let edit = tuples.findIndex((x) => x.index === tuple.index);
 
-            tuples[edit].value = tuple.value;
             solved[edit] = tuple;
+
             this.setState(
-                { tuples: tuples, solved: solved },
-                console.log("index edited", tuples[edit])
+                { solved: solved }
+                // console.log("index edited", tuples[edit])
             );
         }
         this.props.moveToNextCell();
