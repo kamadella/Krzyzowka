@@ -54,15 +54,7 @@ export default class Grid extends Component {
         }
         this.setState({ grid: newGrid }); //tu ustalam cały grid komórek
     }
-
-
-
-    classNames = (props) =>
-        Object.keys(props)
-            .filter((f) => props[f] === true)
-            .join(" ");
-
-    
+  
             
     handleWordChange = (tuple) => {
         //the incoming tuple is an array, needs sorting by tuple.index
@@ -75,9 +67,9 @@ export default class Grid extends Component {
 
         sorted.forEach((e) => (word += e.value));
 
-        let { solvedWords } = this.state;
+        console.log("GhandleWordChange", tuple.number, word);
 
-        console.log("GhandleWordChange", solvedWords, tuple.value);
+        this.props.addSolvedWord({ word: word, number: tuple.number });
 
     };
 

@@ -19,7 +19,6 @@ code {
 /*                KRZYŻÓWKA              */
 
 .grid_container {
-  height: 70vh;
   margin: 0 auto;
   text-align: center;
 }
@@ -69,6 +68,10 @@ code {
   background-color: blue;
   color: white;
   cursor: pointer;
+}
+
+.editing {
+  background-color: yellow;
 }
 
 /*           KONIEC    KRZYŻÓWKA           */

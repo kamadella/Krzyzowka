@@ -48,7 +48,7 @@ export class Crossword extends Component {
                 {
                     word: "relish",
                     orientation: "down",
-                    x: 9,
+                    x: 8,
                     y: 5,
                     length: 6
                 }
@@ -73,22 +73,37 @@ export class Crossword extends Component {
             numberOfWords: 6,
             refs: [],
             currentFocus: 0,
-            currentWord: 0
+            currentWord: null
         }
     };
 }
 
 addSolvedWord = (tuple) => {
   
-    let wordToAdd = tuple.words[tuple.number]
-    ? tuple.words[tuple.number]
-    : tuple.words[0];
-
-    console.log("CWaddSolvedWord", {
-        word: wordToAdd,
-        number: tuple.number
-    });
-
+    let { attempts, numberOfWords } = this.state.data;
+    if (attempts.length < numberOfWords) {
+        this.setState(
+            (prevState) => ({
+                data: {
+                    ...this.state.data,
+                    attempts: [...this.state.data.attempts, tuple]
+                }
+            }),
+            console.log("Added attempt ", tuple)
+        );
+    } else {
+        //check if tuple.number exists in attempt
+        attempts[tuple.number].word = tuple.word;
+        this.setState(
+            (prevState) => ({
+                data: {
+                    ...this.state.data,
+                    attempts: attempts
+                }
+            }),
+            console.log("Edited attempt ", tuple)
+        );
+    }
 };
 
 checkAnswers = () => {
@@ -98,7 +113,7 @@ checkAnswers = () => {
 
   if (attempts.length === answers.length) {
       attempts.forEach((attempt, index) => {
-          if (answers.includes(attempts[index])) {
+        if ( answers.includes(attempts[index].word) && answers[index] === attempt.word ) {
               score += 1;
           }
       });
@@ -224,18 +239,15 @@ render() {
                 addToRefs={this.addToRefs}
                 moveToNextCell={this.moveToNextCell}
                 changeActiveCell={this.changeActiveCell}
+                currentWord={this.state.data.currentWord}
                 ></Grid>
                 {this.state.data.clues.map((clue, index) => {
                     return (
-                      <div className="clue" key={clue}>
-                      <li
-                          onClick={(e) =>
-                              this.handleClueClick(e, index)
-                          }
-                      >
+                    <div className={ this.state.data.currentWord === index ? "clue editing" : "clue "} key={clue}>
+                        <li onClick={(e) => this.handleClueClick(e, index) } >
                           {clue}
-                      </li>
-                  </div>
+                        </li>
+                    </div>
                     );
                 })}
                 <button onClick={this.checkAnswers}>Check answers</button>
