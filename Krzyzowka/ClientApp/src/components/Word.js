@@ -7,13 +7,15 @@ export default class Word extends Component {
         this.state = {
             solution: this.props.word,
             solved: [],
-            editing: false,
-            value: "",
             tuples: [],
             indices: [],
-            cells: []
+            cells: [],
+            editing: this.props.currentWord === this.props.index,
+            value: " ",
+            currentWord: null
         };
     }
+
 
     componentDidMount() {
         let cells = [];
@@ -23,13 +25,12 @@ export default class Word extends Component {
             cells.push(
                 <React.Fragment key={this.props.word + index}>
                     <Cell
+                        currentWord={this.props.currentWord}
+                        answer={this.props.word[index]}
+                        value={this.state.value}
                         index={index}
-                        word={this.props.word}
-                        wordEditing={this.state.editing}
-                        orientation={this.props.orientation}
                         number={index === 0 ? this.props.number + 1 : null}
                         wordNum={this.props.number}
-                        length={this.props.word.length}
                         x={
                             this.props.orientation === "across"
                                 ? this.props.x + index
@@ -41,12 +42,9 @@ export default class Word extends Component {
                                 : this.props.y
                         }
                         onWordChange={this.handleWordChange}
-                        refer={this.props.refer}
-                        id={this.props.word}
                         addToRefs={this.props.addToRefs}
                         moveToNextCell={this.props.moveToNextCell}
                         changeActiveCell={this.props.changeActiveCell}
-                        currentWord={this.props.currentWord}
                     />
                 </React.Fragment>
             );
@@ -55,39 +53,70 @@ export default class Word extends Component {
         this.setState({ cells: cells, currentWord: this.props.currentWord });
     }
 
-    componentDidUpdate() {
-        console.log(
-            "WCDU",
-            this.props.currentWord === this.props.number,
-            this.props.currentWord,
-            this.props.number
-        );
+
+
+    componentDidUpdate(prevProps) {
+        if (prevProps !== this.props) {
+            let cells = [];
+            const splitWord = this.props.word.split("");
+
+            splitWord.forEach((element, index) => {
+                cells.push(
+                    <React.Fragment key={this.props.word + index}>
+                        <Cell
+                            currentWord={this.props.currentWord}
+                            answer={this.props.word[index]}
+                            value={this.state.tuples}
+                            index={index}
+                            number={index === 0 ? this.props.number + 1 : null}
+                            wordNum={this.props.number}
+                            x={
+                                this.props.orientation === "across"
+                                    ? this.props.x + index
+                                    : this.props.x
+                            }
+                            y={
+                                this.props.orientation === "down"
+                                    ? this.props.y + index
+                                    : this.props.y
+                            }
+                            onWordChange={this.handleWordChange}
+                            addToRefs={this.props.addToRefs}
+                            moveToNextCell={this.props.moveToNextCell}
+                            changeActiveCell={this.props.changeActiveCell}
+                        />
+                    </React.Fragment>
+                );
+            });
+
+            this.setState({
+                cells: cells,
+                currentWord: this.props.currentWord
+            });
+        }
 
         const { solved, solution } = this.state;
+
         if (this.state.solved.length === solution.length) {
             this.props.wordChange(
                 {
                     value: solved,
                     number: this.props.number,
                     currentWord: this.props.currentWord
-                },
-                console.log(
-                    "WCDU -->",
-                    this.props.currentWord === this.props.number,
-                    this.props.currentWord,
-                    this.props.number
-                )
+                }
             );
         }
     }
 
 
     addToRefs = (ref) => {
+        //called by Cell cDm
         this.props.addToRefs(ref);
     };
 
 
     handleWordChange = (tuple) => {
+        //called by Cell handleChange
        // console.log("word handleWordChange", tuple);
         let { tuples, indices, solved } = this.state;
 

@@ -17,21 +17,20 @@ code {
 
 
 /*                KRZYŻÓWKA              */
+.CW-container {
+  background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+}
 
 .grid_container {
   margin: 0 auto;
-  text-align: center;
 }
-.crossword__grid {
-  background-color: lightgrey;
-  /*use a variable*/
-}
+
 *:focus {
   outline: none;
 }
 
 .word {
-  border: 1px solid red;
+  border: 1px solid black;
 }
 
 .input {
@@ -57,24 +56,59 @@ code {
 }
 
 .cell {
-  border: 1px solid red;
+  border: 1px solid black;
 }
 
-.clue {
+
+.clues {
+  padding: 5px;
+  height: inherit;
+  overflow: scroll;
+  height: 30vh;
+}
+
+.clueleft {
   font-size: 24px;
+  width: 50%;
 }
 
 .clue:hover {
-  background-color: blue;
+  background-color: #871292;
   color: white;
   cursor: pointer;
 }
 
 .editing {
-  background-color: yellow;
+  background-color: pink;
+  color: black;
 }
 
 li {
   margin-left: 10px;
+  padding: 2px;
+  text-align: left;
+}
+
+.buttons {
+  margin-top: 20px;
+  padding: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.button {
+  text-align: center;
+  padding: 10px 15px;
+  margin: 5px;
+  font-size: 12px;
+  background-color: #efefef;
+  border-radius: 30px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: pink;
 }
 /*           KONIEC    KRZYŻÓWKA           */

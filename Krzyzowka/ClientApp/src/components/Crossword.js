@@ -11,93 +11,88 @@ export class Crossword extends Component {
                 width: 13,
                 wordList: [
                     {
-                        word: "Word",
+                        word: "uszka",
                         orientation: "down",
-                        x: 2,
-                        y: 1,
-                        length: 4
-                    },
-                    {
-                        word: "consolidate",
-                        orientation: "across",
                         x: 1,
-                        y: 2,
-                        length: 11
-                    },
-                    {
-                        word: "shift",
-                        orientation: "down",
-                        x: 4,
                         y: 2,
                         length: 5
                     },
                     {
-                        word: "ice",
+                        word: "szczeniak",
                         orientation: "across",
-                        x: 4,
-                        y: 4,
+                        x: 1,
+                        y: 3,
+                        length: 9
+                    },
+                    {
+                        word: "piesek",
+                        orientation: "down",
+                        x: 5,
+                        y: 1,
+                        length: 6
+                    },
+                    {
+                        word: "samoyed",
+                        orientation: "down",
+                        x: 8,
+                        y: 2,
+                        length: 7
+                    },
+                    {
+                        word: "nos",
+                        orientation: "across",
+                        x: 7,
+                        y: 5,
                         length: 3
                     },
                     {
-                        word: "truce",
+                        word: "mudik",
                         orientation: "across",
-                        x: 4,
-                        y: 6,
+                        x: 6,
+                        y: 8,
                         length: 5
-                    },
-                    {
-                        word: "relish",
-                        orientation: "down",
-                        x: 8,
-                        y: 5,
-                        length: 6
                     }
                 ],
                 clues: [ 
-                    "Co to świat?",
-                    "długie łsowo?", 
-                    "ctr + + delete?", 
-                    "zimne?", 
-                    "coś?", 
-                    "pasujem?" 
+                    "zdrobnienie narządu do słyszenia",
+                    "psie dziecko", 
+                    "zdrobnienie slowa pies", 
+                    "najładniejsza rasa psa", 
+                    "służy do wąchania", 
+                    "dziwna rasa psa" 
                 ],
                 answers: [
                     {
-                        word: "Word",
+                        word: "uszka",
                         number: 0
                     },
                     {
-                        word: "consolidate",
+                        word: "szczeniak",
                         number: 1
                     },
                     {
-                        word: "shift",
+                        word: "piesek",
                         number: 2
                     },
                     {
-                        word: "ice",
+                        word: "samoyed",
                         number: 3
                     },
                     {
-                        word: "truce",
+                        word: "nos",
                         number: 4
                     },
                     {
-                        word: "relish",
+                        word: "mudik",
                         number: 5
                     }
-                //"Word",
-                //"consolidate",
-                //"shift",
-                //"ice",
-                //"truce",
-                //"relish"
                 ],
                 attempts: [],
                 numberOfWords: 6,
                 refs: [],
                 currentFocus: 0,
-                currentWord: null
+                currentWord: null,
+                reset: false
             }
         };
     }
@@ -155,6 +150,12 @@ export class Crossword extends Component {
         }
     };
 
+
+    checkThis = () => {
+        console.log("checkthis");
+    };
+
+
     checkAnswers = () => {
     const { attempts, answers } = this.state.data;
     
@@ -164,39 +165,28 @@ export class Crossword extends Component {
         sa.sort((a, b) => {
             return a.number - b.number;
         });
-    //console.log(attempts, answers);
-    
-    let score = 0;
-    let newAttempts = sa;
+        //console.log(attempts, answers);
+        
+        let score = 0;
+        let newAttempts = sa;
 
-    if (newAttempts.length === answers.length) {
-        newAttempts.forEach((attempt, index) => {
-            if ( answers[attempt.number].word === attempt.word && answers[index].number === attempt.number ) {
-                console.log(
-                    `${attempt.word} : ${attempt.number} - ${
-                        answers[attempt.number].word
-                    }: ${answers[index].number}`
-                );
-                score += 1;
+        if (newAttempts.length === answers.length) {
+            newAttempts.forEach((attempt, index) => {
+                if ( answers[attempt.number].word === attempt.word && answers[index].number === attempt.number ) {
+                    score += 1;
+                }
+            });
+
+            if (score === answers.length) {
+                console.log("Correct!");
+            } else {
+                console.log("Incorrect!");
             }
-        });
-
-        if (score === answers.length) {
-            console.log("Correct!");
         } else {
-            console.log("Incorrect!");
+            console.log(
+                "Please answer all " + attempts.length + " of " + answers.length
+            );
         }
-    } else {
-        console.log(
-            "Please answer all " + attempts.length + " of " + answers.length
-        );
-    }
-    };
-
-
-    clearEverything = () => {
-        console.log("clear everything and rerender from scratch");
-        // this.setState({ data: null });
     };
 
 
@@ -211,7 +201,7 @@ export class Crossword extends Component {
         }
 
         this.setState(
-            { currentFocus: startingCell },
+            { currentFocus: startingCell, currentWord: index },
             this.state.data.refs[startingCell].current.focus()
             );
     };
@@ -238,16 +228,16 @@ export class Crossword extends Component {
         const { currentFocus, refs } = this.state.data;
         let nextCell = 0;
 
-            if (currentFocus < refs.length - 1) {
-                if (backwards) {
-                    nextCell = currentFocus === 0 ? 0 : currentFocus - 1;
-                } else {
-                    nextCell = currentFocus + 1;
-                }
+        if (currentFocus < refs.length - 1) {
+            if (backwards) {
+                nextCell = currentFocus === 0 ? 0 : currentFocus - 1;
+            } else {
+                nextCell = currentFocus + 1;
+            }
 
-                this.setState(
-                    { currentFocus: nextCell },
-                    this.state.data.refs[nextCell].current.focus()
+            this.setState(
+               { currentFocus: nextCell },
+                this.state.data.refs[nextCell].current.focus()
                 );
             } else {
                 nextCell = 0;
@@ -259,6 +249,7 @@ export class Crossword extends Component {
 
         
     };
+
 
     changeActiveCell = (activeCell) => {
         // activeCell = {index: 0, wordNum: 0}
@@ -282,14 +273,17 @@ export class Crossword extends Component {
         }));
     };
 
+
+
+
     addToRefs = (ref) => {
-    const { data } = this.state;
-    this.setState((prevState) => ({
-        data: {
-            ...data,
-            refs: prevState.data.refs.concat(ref)
-        }
-    }));
+        const { data } = this.state;
+        this.setState((prevState) => ({
+            data: {
+                ...data,
+                refs: prevState.data.refs.concat(ref)
+            }
+        }));
     };
 
     render() {
@@ -310,6 +304,9 @@ export class Crossword extends Component {
                     changeActiveCell={this.changeActiveCell}
                     currentWord={this.state.data.currentWord}
                     handleNewCurrentWord={this.handleNewCurrentWord}
+                    checkCurrentWord={this.checkThis}
+                    clearCurrentWord={this.clearThis}
+                    clearAllWords={this.clearEverything}
                     ></Grid>
                     {this.state.data.clues.map((clue, index) => {
                         return (
@@ -321,16 +318,9 @@ export class Crossword extends Component {
                         );
                     })}
                     <div className="buttons">
-                        <button onClick={this.checkThis}>Check This</button>
-                        <button onClick={this.revealThis}>Reveal This</button>
-                        <button onClick={this.clearThis}>Clear This</button>
-                        <br />
-                        <br />
-                        <button onClick={this.checkAnswers}>Check All</button>
-                        <button onClick={this.revealAll}>Reveal All</button>
-                        <button onClick={this.clearEverything}>
-                            Clear All
-                        </button>
+                        <button className="button" onClick={this.checkThis}>Sprawdź to</button>
+                        <button className="button" onClick={this.checkAnswers}>Sprawdź wszystko</button>
+                        <button className="button" onClick={this.loser}>Poddaj się</button>
                     </div>
                 </div>
             );

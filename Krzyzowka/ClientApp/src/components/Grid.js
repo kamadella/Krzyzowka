@@ -15,21 +15,18 @@ export default class Grid extends Component {
         };
     }
 
-    componentDidUpdate() {
-        if (this.props.currentWord !== this.state.currentWord) {
+    componentDidUpdate(prevProps) {
+        let words = [];
+        if (prevProps.currentWord !== this.props.currentWord) {
             this.setState(
-                { currentWord: this.props.currentWord },
-                console.log("GcDu", this.state.currentWord)
+                { currentWord: this.props.currentWord, wordsLoaded: false },
+                console.log("GcDu", this.props.currentWord)
             );
 
-            // this.props.handleNewCurrentWord(this.props.currentWord);
         }
-        if (
-            !this.state.wordsLoaded &&
-            this.props.data.numberOfWords === this.props.data.wordList.length
-        ) {
-            console.log("GCDU", this.props.currentWord);
-            const words = this.props.data.wordList.map((word, index) => (
+        if ( !this.state.wordsLoaded && this.props.data.numberOfWords === this.props.data.wordList.length ) {
+            // WORDS are mapped each time CW rerenders?
+            words = this.props.data.wordList.map((word, index) => (
                 <Word
                     refer={this.props.data.refs[index]}
                     number={index}
@@ -42,11 +39,15 @@ export default class Grid extends Component {
                     addToRefs={this.props.addToRefs}
                     moveToNextCell={this.props.moveToNextCell}
                     changeActiveCell={this.props.changeActiveCell}
-                    currentWord={this.state.currentWord}
+                    currentWord={this.props.currentWord} 
                 />
             ));
 
-            this.setState({ wordsLoaded: true, words: words });
+            this.setState({
+                wordsLoaded: true,
+                words: words,
+                currentWord: this.props.currentWord
+            });
         }
     }
 
@@ -58,7 +59,7 @@ export default class Grid extends Component {
         for (let i = 1; i < width; i++) {
             for (let j = 1; j < height; j++) {
                 newGrid.push( //tworzymy komórki
-                    <Cell x={i} y={j} value={""} key={Math.random()} />
+                    <Cell x={i} y={j} value={"-"} key={Math.random()} />
                 );
             }
         }
@@ -77,7 +78,6 @@ export default class Grid extends Component {
 
         sorted.forEach((e) => (word += e.value));
 
-        console.log("GhandleWordChange", tuple.number, word);
 
         this.props.addSolvedWord(
             { word: word, number: tuple.number },
@@ -88,7 +88,7 @@ export default class Grid extends Component {
 
     render() {
         // to wielkosc calej planszy w sensie jak duza jest wyswietlana
-        const dim =" 0 0 " + (13 * this.props.data.width + 3) + " " + (13 * this.props.data.height + 3); 
+        const dim =" 0 0 " + (10 * this.props.data.width + 3) + " " + (10 * this.props.data.height + 3); 
         // to tworzymy komórki na uzupelnianie hasla
         return (
             <div className="grid_container">

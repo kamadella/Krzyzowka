@@ -5,7 +5,8 @@ export default class Cell extends Component {
         super(props);
         this.state = { 
             inputVal: "",
-            value: ""
+            value: "",
+            currentWord: this.props.currentWord
         };
 
         this.cellRef = React.createRef();
@@ -19,11 +20,17 @@ export default class Cell extends Component {
     }
 
     handleFocus = () => {
-        this.setState({ editing: !this.state.editing });
-        this.props.changeActiveCell({
-            index: this.props.index,
-            wordNum: this.props.wordNum
-        });
+        if (this.props.value !== "-") {
+            this.setState({ editing: !this.state.editing });
+            this.props.changeActiveCell(
+                {
+                    index: this.props.index,
+                    wordNum: this.props.wordNum,
+                    currentWord: this.props.wordNum
+                },
+                console.log()
+            );
+        }
     };
 
     handleBlur = () => {
@@ -46,12 +53,12 @@ export default class Cell extends Component {
 
     render() {
         //(status = age >= 18 ? 'adult' : 'minor';)
-        const style = this.state.editing
-            ? "rgb(255,255,153)" //żółty
-            : this.props.value === ""
-            ? "rgb(10, 10, 10)" //czarny
-            : "rgb(200, 200, 200)"; //szary
-
+        const style =
+            this.props.value === "-"
+                ? "rgba(0, 0, 0, 0.85)"
+                : this.props.currentWord === this.props.wordNum
+                ? "rgb(200,200,0)"
+                : "rgb(200, 200, 200)";
         //skomplikowane wyliczenia zeby komorki ladnie sie wyswietlaly
         const x =
             this.props.x === 1
