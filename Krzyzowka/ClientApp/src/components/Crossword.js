@@ -1,31 +1,326 @@
 import React, { Component } from 'react';
+import Grid from "./Grid";
 
 export class Crossword extends Component {
-  static displayName = Crossword.name;
+    constructor(props) {
+        super(props);
 
-  constructor(props) {
-    super(props);
-    this.state = { currentCount: 0 };
-    this.incrementCounter = this.incrementCounter.bind(this);
-  }
+        this.state = {
+            data: {
+                height: 13,
+                width: 13,
+                wordList: [
+                    {
+                        word: "uszka",
+                        orientation: "down",
+                        x: 1,
+                        y: 2,
+                        length: 5
+                    },
+                    {
+                        word: "szczeniak",
+                        orientation: "across",
+                        x: 1,
+                        y: 3,
+                        length: 9
+                    },
+                    {
+                        word: "piesek",
+                        orientation: "down",
+                        x: 5,
+                        y: 1,
+                        length: 6
+                    },
+                    {
+                        word: "samoyed",
+                        orientation: "down",
+                        x: 8,
+                        y: 2,
+                        length: 7
+                    },
+                    {
+                        word: "nos",
+                        orientation: "across",
+                        x: 7,
+                        y: 5,
+                        length: 3
+                    },
+                    {
+                        word: "mudik",
+                        orientation: "across",
+                        x: 6,
+                        y: 8,
+                        length: 5
+                    }
+                ],
+                clues: [ 
+                    "zdrobnienie narządu do słyszenia",
+                    "psie dziecko", 
+                    "zdrobnienie slowa pies", 
+                    "najładniejsza rasa psa", 
+                    "służy do wąchania", 
+                    "dziwna rasa psa" 
+                ],
+                answers: [
+                    {
+                        word: "uszka",
+                        number: 0
+                    },
+                    {
+                        word: "szczeniak",
+                        number: 1
+                    },
+                    {
+                        word: "piesek",
+                        number: 2
+                    },
+                    {
+                        word: "samoyed",
+                        number: 3
+                    },
+                    {
+                        word: "nos",
+                        number: 4
+                    },
+                    {
+                        word: "mudik",
+                        number: 5
+                    }
+                ],
+                attempts: [],
+                numberOfWords: 6,
+                refs: [],
+                currentFocus: 0,
+                currentWord: null,
+                reset: false
+            }
+        };
+    }
 
-  incrementCounter() {
-    this.setState({
-      currentCount: this.state.currentCount + 1
-    });
-  }
 
-  render() {
-    return (
-      <div>
-        <h1>Counter</h1>
+    addSolvedWord = (tuple) => {
+    
+        let { attempts } = this.state.data;
+        let answeredIndices = [];
 
-        <p>This is a simple example of a React component.</p>
+        tuple.word = tuple.word.toLowerCase();
 
-        <p aria-live="polite">Current count: <strong>{this.state.currentCount}</strong></p>
+        for (let i = 0; i < attempts.length; i++) {
+            answeredIndices.push(attempts[i].number);
+        }
 
-        <button className="btn btn-primary" onClick={this.incrementCounter}>Increment</button>
-      </div>
-    );
-  }
+        if ( attempts.length !== 0) {
+            if (answeredIndices.includes(tuple.number)) {
+                attempts[answeredIndices.indexOf(tuple.number)].word =
+                    tuple.word;
+
+                this.setState(
+                    (prevState) => ({
+                        data: {
+                            ...this.state.data,
+                            attempts: attempts
+                        }
+                    }),
+                    console.log("Edytowano slowo ", tuple)
+                );
+            } else {
+                //add an attempt
+                this.setState(
+                    (prevState) => ({
+                        data: {
+                            ...this.state.data,
+                            attempts: [...this.state.data.attempts, tuple]
+                        }
+                    }),
+                    console.log("Dodano slowo ", tuple)
+                );
+            }
+        } else {
+            //add an attempt
+            this.setState(
+                (prevState) => ({
+                    data: {
+                        ...this.state.data,
+                        attempts: [...this.state.data.attempts, tuple]
+                    }
+                }),
+                console.log("Added attempt ", tuple)
+            );
+        }
+    };
+
+
+    checkThis = () => {
+        console.log("checkthis");
+    };
+
+
+    checkAnswers = () => {
+    const { attempts, answers } = this.state.data;
+    
+        // sortedAnswers
+        let sa = attempts.slice(0);
+
+        sa.sort((a, b) => {
+            return a.number - b.number;
+        });
+        //console.log(attempts, answers);
+        
+        let score = 0;
+        let newAttempts = sa;
+
+        if (newAttempts.length === answers.length) {
+            newAttempts.forEach((attempt, index) => {
+                if ( answers[attempt.number].word === attempt.word && answers[index].number === attempt.number ) {
+                    score += 1;
+                }
+            });
+
+            if (score === answers.length) {
+                console.log("Brawo wszystkie odgadłeś!");
+            } else {
+                console.log("przykro mi masz błąd!");
+            }
+        } else {
+            console.log("Sorka ale musisz odpowiedziec na wszystko na razie masz: " + attempts.length + " na " + answers.length);
+        }
+    };
+
+
+    handleClueClick = (e, index) => {
+        let startingCell = 0;
+
+        for (let i = 0; i < index; i++) {
+            startingCell =
+                index === 0
+                    ? 0
+                    : (startingCell += this.state.data.wordList[i].word.length);
+        }
+
+        this.setState(
+            { currentFocus: startingCell, currentWord: index },
+            this.state.data.refs[startingCell].current.focus()
+            );
+    };
+
+
+    handleNewCurrentWord = (neWord) => {
+        this.setState(
+            (prevState) => ({
+                data: {
+                    ...this.state.data,
+                    currentWord: neWord
+                }
+            }),
+            console.log("CWhandleNewCurrentWord", neWord)
+        );
+    };
+
+
+    moveToNextCell = (backwards) => {
+        //all the cell change logic is in changeActiveCell
+        //here we will just call changeActiveCell with parameters in a
+        //loop
+
+        const { currentFocus, refs } = this.state.data;
+        let nextCell = 0;
+
+        if (currentFocus < refs.length - 1) {
+            if (backwards) {
+                nextCell = currentFocus === 0 ? 0 : currentFocus - 1;
+            } else {
+                nextCell = currentFocus + 1;
+            }
+
+            this.setState(
+               { currentFocus: nextCell },
+                this.state.data.refs[nextCell].current.focus()
+                );
+            } else {
+                nextCell = 0;
+                this.setState(
+                    { currentFocus: nextCell },
+                    this.state.data.refs[nextCell].current.focus()
+                );
+        }
+
+        
+    };
+
+
+    changeActiveCell = (activeCell) => {
+        // activeCell = {index: 0, wordNum: 0}
+
+        let newActiveCell = 0,
+            allPrevWords = 0,
+            allCurWordChars = activeCell.index;
+
+        for (let i = 0; i < activeCell.wordNum; i++) {
+            allPrevWords += this.state.data.wordList[i].length;
+        }
+
+        newActiveCell = allPrevWords + allCurWordChars;
+
+        this.setState((prevState) => ({
+            data: {
+                ...this.state.data,
+                currentFocus: newActiveCell,
+                currentWord: activeCell.wordNum
+            }
+        }));
+    };
+
+
+
+
+    addToRefs = (ref) => {
+        const { data } = this.state;
+        this.setState((prevState) => ({
+            data: {
+                ...data,
+                refs: prevState.data.refs.concat(ref)
+            }
+        }));
+    };
+
+    render() {
+        //return (
+        //    <div>
+        //        <p>{this.state.data.wordList.length}</p>
+        //        <Grid data={this.state.data}></Grid>
+        //    </div>
+        //);
+        if (this.state.data.wordList.length > 0) {
+            return (
+                <div className="CW-container">
+                    <Grid 
+                    data={this.state.data} 
+                    addSolvedWord={this.addSolvedWord}
+                    addToRefs={this.addToRefs}
+                    moveToNextCell={this.moveToNextCell}
+                    changeActiveCell={this.changeActiveCell}
+                    currentWord={this.state.data.currentWord}
+                    handleNewCurrentWord={this.handleNewCurrentWord}
+                    checkCurrentWord={this.checkThis}
+                    ></Grid>
+                    {this.state.data.clues.map((clue, index) => {
+                        return (
+                        <div className={ this.state.data.currentWord === index ? "clue editing" : "clue "} key={clue}>
+                            <li onClick={(e) => this.handleClueClick(e, index) } >
+                            {clue}&nbsp;({this.state.data.wordList[index].length})
+                            </li>
+                        </div>
+                        );
+                    })}
+                    <div className="buttons">
+                        <button className="button" onClick={this.checkThis}>Sprawdź to</button>
+                        <button className="button" onClick={this.checkAnswers}>Sprawdź wszystko</button>
+                        <button className="button" onClick={this.loser}>Poddaj się</button>
+                    </div>
+                </div>
+            );
+        } else {
+            return <p>Loading...</p>;
+        }
+    }
 }

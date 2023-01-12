@@ -1,0 +1,142 @@
+import React, { Component } from "react";
+import Cell from "./Cell";
+
+export default class Word extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            solution: this.props.word,
+            solved: [],
+            indices: [],
+            cells: [],
+            currentWord: null
+        };
+    }
+
+
+    componentDidMount() {
+        let cells = [];
+        const splitWord = this.props.word.split("");
+
+        splitWord.forEach((element, index) => {
+            cells.push(
+                <React.Fragment key={this.props.word + index}>
+                    <Cell
+                        currentWord={this.props.currentWord}
+                        answer={this.props.word[index]}
+                        value={this.state.value}
+                        index={index}
+                        number={index === 0 ? this.props.number + 1 : null}
+                        wordNum={this.props.number}
+                        x={
+                            this.props.orientation === "across"
+                                ? this.props.x + index
+                                : this.props.x
+                        }
+                        y={
+                            this.props.orientation === "down"
+                                ? this.props.y + index
+                                : this.props.y
+                        }
+                        onWordChange={this.handleWordChange}
+                        addToRefs={this.props.addToRefs}
+                        moveToNextCell={this.props.moveToNextCell}
+                        changeActiveCell={this.props.changeActiveCell}
+                    />
+                </React.Fragment>
+            );
+        });
+
+        this.setState({ cells: cells, currentWord: this.props.currentWord });
+    }
+
+
+
+    componentDidUpdate(prevProps) {
+        if (prevProps !== this.props) {
+            let cells = [];
+            const splitWord = this.props.word.split("");
+
+            splitWord.forEach((element, index) => {
+                cells.push(
+                    <React.Fragment key={this.props.word + index}>
+                        <Cell
+                            currentWord={this.props.currentWord}
+                            answer={this.props.word[index]}
+                            index={index}
+                            number={index === 0 ? this.props.number + 1 : null}
+                            wordNum={this.props.number}
+                            x={
+                                this.props.orientation === "across"
+                                    ? this.props.x + index
+                                    : this.props.x
+                            }
+                            y={
+                                this.props.orientation === "down"
+                                    ? this.props.y + index
+                                    : this.props.y
+                            }
+                            onWordChange={this.handleWordChange}
+                            addToRefs={this.props.addToRefs}
+                            moveToNextCell={this.props.moveToNextCell}
+                            changeActiveCell={this.props.changeActiveCell}
+                        />
+                    </React.Fragment>
+                );
+            });
+
+            this.setState({
+                cells: cells,
+                currentWord: this.props.currentWord
+            });
+        }
+
+        const { solved, solution } = this.state;
+
+        if (this.state.solved.length === solution.length) {
+            this.props.wordChange(
+                {
+                    value: solved,
+                    number: this.props.number,
+                    currentWord: this.props.currentWord
+                }
+            );
+        }
+    }
+
+
+    addToRefs = (ref) => {
+        //called by Cell cDm
+        this.props.addToRefs(ref);
+    };
+
+
+    handleWordChange = (tuple) => {
+        //called by Cell handleChange
+       // console.log("word handleWordChange", tuple);
+        let { tuples, indices, solved } = this.state;
+
+        if (this.state.indices.indexOf(tuple.index) === -1) {
+            //if incoming indice is empty
+            this.setState({
+                solved: [...solved, tuple],
+                indices: [...indices, tuple.index]
+            });
+        } else {
+            let edit = tuples.findIndex((x) => x.index === tuple.index);
+
+            solved[edit] = tuple;
+
+            this.setState(
+                { solved: solved }
+                // console.log("index edited", tuples[edit])
+            );
+        }
+        this.props.moveToNextCell();
+    };
+
+
+    render() {
+        return this.state.cells;
+    }
+}
