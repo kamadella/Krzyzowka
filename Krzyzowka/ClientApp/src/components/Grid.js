@@ -38,6 +38,7 @@ export default class Grid extends Component {
                     wordChange={this.handleWordChange}
                     addToRefs={this.props.addToRefs}
                     moveToNextCell={this.props.moveToNextCell}
+                    moveToNextWord={this.props.moveToNextWord}
                     changeActiveCell={this.props.changeActiveCell}
                     currentWord={this.props.currentWord} 
                 />

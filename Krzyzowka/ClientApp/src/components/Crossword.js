@@ -197,16 +197,19 @@ export class Crossword extends Component {
     };
 
 
+    //przechodzimy do słowa o indeksie podanym w inpucie
     handleClueClick = (e, index) => {
+        //określamy indeks pierwszego znaku słowa
+        //jeśli mówimy o 1 słowie, jest to już jego indeks
         let startingCell = 0;
 
+        //sumujemy liczby znaków w poprzednich słowach
         for (let i = 0; i < index; i++) {
-            startingCell =
-                index === 0
-                    ? 0
-                    : (startingCell += this.state.data.wordList[i].word.length);
+            startingCell += this.state.data.wordList[i].word.length;
         }
 
+        //ustawiamy inteks słowa i jego początkowego znaku,
+        //po czym przenosimy na jego komurkę uwagę
         this.setState(
             { currentFocus: startingCell, currentWord: index },
             this.state.data.refs[startingCell].current.focus()
@@ -244,6 +247,43 @@ export class Crossword extends Component {
         this.setState(
             { currentFocus: nextCell },
             this.state.data.refs[nextCell].current.focus()
+        );
+        
+    };
+    
+    //funkcja która przenosi nas do następnego/poprzedniego słowa
+    moveToNextWord = (backwards) => {
+
+        //pobieramy zmienne ze stanu
+        const { currentWord, numberOfWords } = this.state.data;
+
+        //określamy zmienne na index następnego słowa i jego komurki początkowej
+        let nextWord = 0;
+        let startingCell = 0;
+
+        //jeśli przekazaliśmy true to cofamy się
+        if (backwards) {
+
+            //liczymy indeks poprzedniego słowa, pamiętając o tym, że jeśli obecne to 0, to musimy przejść na koniec
+            nextWord = currentWord === 0 ? (numberOfWords - 1) : (currentWord - 1);
+        } else {
+            //liczymy indeks następnego słowa tym razem możemy użyć modulo
+            nextWord = (currentWord + 1) % numberOfWords;
+        }
+
+        //liczymy indeks pierwszego znaku w następnym słowie
+        //aby to zrobić przejdziemy po każdym poprzednim 
+        //i dodamy do siebie ilości ich znaków
+        //jeśli mowa o 1 słowie, to jego indeks już mamy
+        for (let i = 0; i < nextWord; i++) {
+            startingCell += this.state.data.wordList[i].word.length;
+        }
+
+        //ustawiamy inteks słowa i jego początkowego znaku,
+        //po czym przenosimy na jego komurkę uwagę
+        this.setState(
+            { currentFocus: startingCell, currentWord: nextWord },
+            this.state.data.refs[startingCell].current.focus()
         );
         
     };
@@ -299,6 +339,7 @@ export class Crossword extends Component {
                     addSolvedWord={this.addSolvedWord}
                     addToRefs={this.addToRefs}
                     moveToNextCell={this.moveToNextCell}
+                    moveToNextWord={this.moveToNextWord}
                     changeActiveCell={this.changeActiveCell}
                     currentWord={this.state.data.currentWord}
                     handleNewCurrentWord={this.handleNewCurrentWord}

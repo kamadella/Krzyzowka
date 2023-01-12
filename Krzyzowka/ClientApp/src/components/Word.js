@@ -42,6 +42,7 @@ export default class Word extends Component {
                         onWordChange={this.handleWordChange}
                         addToRefs={this.props.addToRefs}
                         moveToNextCell={this.props.moveToNextCell}
+                        moveToNextWord={this.props.moveToNextWord}
                         changeActiveCell={this.props.changeActiveCell}
                     />
                 </React.Fragment>
@@ -81,6 +82,7 @@ export default class Word extends Component {
                             onWordChange={this.handleWordChange}
                             addToRefs={this.props.addToRefs}
                             moveToNextCell={this.props.moveToNextCell}
+                            moveToNextWord={this.props.moveToNextWord}
                             changeActiveCell={this.props.changeActiveCell}
                         />
                     </React.Fragment>
@@ -115,7 +117,7 @@ export default class Word extends Component {
 
     handleWordChange = (tuple) => {
         //called by Cell handleChange
-       // console.log("word handleWordChange", tuple);
+        //console.log("word handleWordChange", tuple);
         let { tuples, indices, solved } = this.state;
 
         if (this.state.indices.indexOf(tuple.index) === -1) {

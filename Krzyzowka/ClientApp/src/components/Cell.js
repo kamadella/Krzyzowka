@@ -51,7 +51,7 @@ export default class Cell extends Component {
         let { index, wordNum } = this.props;
         let value = e.target.value;
 
-        if (value !== "") {
+        if (/[a-zA-Z]/.test(value)) {
             this.setState(
                 {
                     value: value
@@ -61,12 +61,24 @@ export default class Cell extends Component {
         }
     };
 
-    handleKeyDown = (e) => {
+    handleKeyDown = (e) => {   
+
+        //przejście do następnej komurki
         if(e.keyCode === 39 || e.keyCode === 40){
             this.props.moveToNextCell(false);
         }
+        //przejście do poprzedniej komurki
         else if(e.keyCode === 37 || e.keyCode === 38){
             this.props.moveToNextCell(true);
+        }
+        //przejście do następnego/poprzedniego słowa 
+        else if(e.keyCode === 9){
+            //tab domyślnie przeniusł by nas do następnego pola,
+            // potencjalnie poza krzyżówkę
+            // wyłączamy to
+            e.preventDefault();
+            //jeśli jest naciśnięty shift to idzie do poprzedniego
+            this.props.moveToNextWord(e.shiftKey);
         }
     }
 
@@ -102,6 +114,7 @@ export default class Cell extends Component {
                 <div >
                     <input 
                         type="text"
+                        tabIndex={-1}
                         onFocus={this.handleFocus}
                         onBlur={this.handleBlur}
                         onChange={this.handleChange}
