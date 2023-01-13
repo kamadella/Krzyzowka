@@ -17,9 +17,9 @@ code {
 
 
 /*                KRZYŻÓWKA              */
-.CW-container {
+.Crossword_container {
   width: 60%;
-  margin-left: 200px;
+  margin: auto;
 }
 
 .grid_container {
@@ -53,29 +53,16 @@ code {
   text-transform: uppercase;
 }
 
-.current {
-  z-index: 999;
-}
-
-.cell {
-  border: 1px solid black;
-}
-
-
-.clues {
+.questions {
+  margin-top: 30px;
   padding: 5px;
   height: inherit;
-  overflow: scroll;
-  height: 30vh;
+  overflow: auto;
+  height: 20vh;
 }
 
-.clueleft {
-  font-size: 24px;
-  width: 50%;
-}
-
-.clue:hover {
-  background-color: #871292;
+.question:hover {
+  background-color: #c046a1;
   color: white;
   cursor: pointer;
 }
@@ -87,6 +74,7 @@ code {
 
 li {
   margin-left: 10px;
+  font-size: 16px;
   padding: 2px;
   text-align: left;
 }
@@ -103,7 +91,7 @@ li {
   text-align: center;
   padding: 10px 15px;
   margin: 5px;
-  font-size: 12px;
+  font-size: 20px;
   background-color: #efefef;
   border-radius: 30px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
@@ -114,3 +102,27 @@ li {
   background-color: pink;
 }
 /*           KONIEC    KRZYŻÓWKA           */
+
+
+/*              SCROLLBAR                  */
+/* width */
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 3px grey; 
+  border-radius: 5px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: pink; 
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #c046a1; 
+}

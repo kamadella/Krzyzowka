@@ -12,48 +12,48 @@ export class Crossword extends Component {
                 wordList: [
                     {
                         word: "uszka",
-                        orientation: "down",
+                        orientation: "vertical",
                         x: 1,
                         y: 2,
                         length: 5
                     },
                     {
                         word: "szczeniak",
-                        orientation: "across",
+                        orientation: "horizontal",
                         x: 1,
                         y: 3,
                         length: 9
                     },
                     {
                         word: "piesek",
-                        orientation: "down",
+                        orientation: "vertical",
                         x: 5,
                         y: 1,
                         length: 6
                     },
                     {
                         word: "samoyed",
-                        orientation: "down",
+                        orientation: "vertical",
                         x: 8,
                         y: 2,
                         length: 7
                     },
                     {
                         word: "nos",
-                        orientation: "across",
+                        orientation: "horizontal",
                         x: 7,
                         y: 5,
                         length: 3
                     },
                     {
                         word: "mudik",
-                        orientation: "across",
+                        orientation: "horizontal",
                         x: 6,
                         y: 8,
                         length: 5
                     }
                 ],
-                clues: [ 
+                qestions: [ 
                     "zdrobnienie narządu do słyszenia",
                     "psie dziecko", 
                     "zdrobnienie slowa pies", 
@@ -87,12 +87,11 @@ export class Crossword extends Component {
                         number: 5
                     }
                 ],
-                attempts: [],
+                user_answers: [],
                 numberOfWords: 6,
                 refs: [],
                 currentFocus: 0,
                 currentWord: null,
-                reset: false
             }
         };
     }
@@ -100,25 +99,24 @@ export class Crossword extends Component {
 
     addSolvedWord = (tuple) => {
     
-        let { attempts } = this.state.data;
+        let { user_answers } = this.state.data;
         let answeredIndices = [];
 
         tuple.word = tuple.word.toLowerCase();
 
-        for (let i = 0; i < attempts.length; i++) {
-            answeredIndices.push(attempts[i].number);
+        for (let i = 0; i < user_answers.length; i++) {
+            answeredIndices.push(user_answers[i].number);
         }
 
-        if ( attempts.length !== 0) {
+        if ( user_answers.length !== 0) {
             if (answeredIndices.includes(tuple.number)) {
-                attempts[answeredIndices.indexOf(tuple.number)].word =
-                    tuple.word;
+                user_answers[answeredIndices.indexOf(tuple.number)].word = tuple.word;
 
                 this.setState(
                     (prevState) => ({
                         data: {
                             ...this.state.data,
-                            attempts: attempts
+                            user_answers: user_answers
                         }
                     }),
                     console.log("Edytowano slowo ", tuple)
@@ -129,7 +127,7 @@ export class Crossword extends Component {
                     (prevState) => ({
                         data: {
                             ...this.state.data,
-                            attempts: [...this.state.data.attempts, tuple]
+                            user_answers: [...this.state.data.user_answers, tuple]
                         }
                     }),
                     console.log("Dodano slowo ", tuple)
@@ -141,55 +139,27 @@ export class Crossword extends Component {
                 (prevState) => ({
                     data: {
                         ...this.state.data,
-                        attempts: [...this.state.data.attempts, tuple]
+                        user_answers: [...this.state.data.user_answers, tuple]
                     }
                 }),
-                console.log("Added attempt ", tuple)
+                console.log("Dodano slowo ", tuple)
             );
         }
     };
 
 
     checkAnswers = () => {
-    const { attempts, answers } = this.state.data;
+        //pobieramy odpowiedzi użytkownika i te prawdziwe
+        const { user_answers, answers } = this.state.data;
         let score = 0;
-        // sortedAnswers
-        /*
-        let sa = attempts.slice(0);
 
-        sa.sort((a, b) => {
-            return a.number - b.number;
-        });
-        //console.log(attempts, answers);
-        
-        let score = 0;
-        let newAttempts = sa;
-        console.log(attempts);
-        
-        if (newAttempts.length === answers.length) {
-            newAttempts.forEach((attempt, index) => {
-                if ( answers[attempt.number].word === attempt.word && answers[index].number === attempt.number ) {
-                    score += 1;
-                }
-            });
-
-            if (score === answers.length) {
-                console.log("Brawo wszystkie odgadłeś!");
-            } else {
-                console.log("przykro mi masz błąd!");
-            }
-        } else {
-
-            console.log("Sorka ale musisz odpowiedziec na wszystko na razie masz: " + attempts.length + " na " + answers.length);
-        }
-        */
-
-        attempts.forEach((attempt) => {
-            if ( answers[attempt.number].word === attempt.word) {
+        //dla kazdej odpowiedzi użytkownika sprawdzamy jej odpowiednik w odpoweidziach liczac po indxach
+        user_answers.forEach((user_answer) => {
+            if ( answers[user_answer.number].word === user_answer.word) {
                 score += 1;
             }
             else {
-                console.log("zła odpowiedz: " + attempt.word + " poprawna to: " + answers[attempt.number].word);
+                console.log("zła odpowiedz: " + user_answer.word + " poprawna to: " + answers[user_answer.number].word);
             }
             
         });
@@ -198,7 +168,7 @@ export class Crossword extends Component {
 
 
     //przechodzimy do słowa o indeksie podanym w inpucie
-    handleClueClick = (e, index) => {
+    handleQuestionClick = (e, index) => {
         //określamy indeks pierwszego znaku słowa
         //jeśli mówimy o 1 słowie, jest to już jego indeks
         let startingCell = 0;
@@ -231,10 +201,6 @@ export class Crossword extends Component {
 
 
     moveToNextCell = (backwards) => {
-        //all the cell change logic is in changeActiveCell
-        //here we will just call changeActiveCell with parameters in a
-        //loop
-
         const { currentFocus, refs } = this.state.data;
         let nextCell = 0;
 
@@ -250,6 +216,7 @@ export class Crossword extends Component {
         );
         
     };
+
     
     //funkcja która przenosi nas do następnego/poprzedniego słowa
     moveToNextWord = (backwards) => {
@@ -290,8 +257,6 @@ export class Crossword extends Component {
 
 
     changeActiveCell = (activeCell) => {
-        // activeCell = {index: 0, wordNum: 0}
-
         let newActiveCell = 0,
             allPrevWords = 0,
             allCurWordChars = activeCell.index;
@@ -324,16 +289,12 @@ export class Crossword extends Component {
         }));
     };
 
+
+
     render() {
-        //return (
-        //    <div>
-        //        <p>{this.state.data.wordList.length}</p>
-        //        <Grid data={this.state.data}></Grid>
-        //    </div>
-        //);
         if (this.state.data.wordList.length > 0) {
             return (
-                <div className="CW-container">
+                <div className="Crossword_container">
                     <Grid 
                     data={this.state.data} 
                     addSolvedWord={this.addSolvedWord}
@@ -344,15 +305,19 @@ export class Crossword extends Component {
                     currentWord={this.state.data.currentWord}
                     handleNewCurrentWord={this.handleNewCurrentWord}
                     ></Grid>
-                    {this.state.data.clues.map((clue, index) => {
-                        return (
-                        <div className={ this.state.data.currentWord === index ? "clue editing" : "clue "} key={clue}>
-                            <li onClick={(e) => this.handleClueClick(e, index) } >
-                            {clue}&nbsp;({this.state.data.wordList[index].length})
-                            </li>
-                        </div>
-                        );
-                    })}
+                    <div className='questions'>
+                        {this.state.data.qestions.map((question, index) => {
+                            return (
+                                
+                                    <div className={ this.state.data.currentWord === index ? "question editing" : "question "} key={question}>
+                                        <li onClick={(e) => this.handleQuestionClick(e, index) } >
+                                        {index+1}.  {question}
+                                        </li>
+                                    </div>
+                            
+                            );
+                        })}
+                    </div>
                     <div className="buttons">
                         <button className="button" onClick={this.checkAnswers}>Sprawdź</button>
                         <button className="button" onClick={this.loser}>Poddaj się</button>
