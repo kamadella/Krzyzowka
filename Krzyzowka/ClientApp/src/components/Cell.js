@@ -26,13 +26,14 @@ export default class Cell extends Component {
         }
     }
 
-
+    //linkowanie po pytaniach
     componentDidMount() {
         if (typeof this.props.addToRefs === "function") {
             this.props.addToRefs(this.cellRef);
         }
     }
-
+    
+    //tu sie dzieje magia zmiany koloru
     handleFocus = () => {
         if (this.props.value !== "-") {
             this.props.changeActiveCell({
@@ -63,17 +64,17 @@ export default class Cell extends Component {
 
     handleKeyDown = (e) => {   
 
-        //przejście do następnej komurki
+        //przejście do następnej komórki
         if(e.keyCode === 39 || e.keyCode === 40){
             this.props.moveToNextCell(false);
         }
-        //przejście do poprzedniej komurki
+        //przejście do poprzedniej komórki
         else if(e.keyCode === 37 || e.keyCode === 38){
             this.props.moveToNextCell(true);
         }
         //przejście do następnego/poprzedniego słowa 
         else if(e.keyCode === 9){
-            //tab domyślnie przeniusł by nas do następnego pola,
+            //tab domyślnie przeniósł by nas do następnego pola,
             // potencjalnie poza krzyżówkę
             // wyłączamy to
             e.preventDefault();
