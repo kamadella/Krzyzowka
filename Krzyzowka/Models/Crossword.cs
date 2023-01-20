@@ -14,18 +14,21 @@ namespace Krzyzowka.Models
         public int height { get; set; }
 
         [Required]
-        public List<wordPlacement> words { get; set; } = null!;
+        public List<WordPlacement> words { get; set; } = null!;
 
     }
 
-    public class wordPlacement
+    public class WordPlacement
     {
         [Key]
         [Required]
         public int Id { get; set; }
+        public int CrosswordId { get; set; }
 
         public int x { get; set; }
         public int y { get; set; }
+
+        public bool vertical { get; set; }
 
         public GuessWord word { get; set; } = null!;
     }
