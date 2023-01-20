@@ -5,7 +5,7 @@ export default class Word extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            solution: this.props.word,
+            length: this.props.length,
             solved: [],
             tuples: [],
             indices: [],
@@ -17,14 +17,12 @@ export default class Word extends Component {
 
     componentDidMount() {
         let cells = [];
-        const splitWord = this.props.word.split("");
 
-        splitWord.forEach((element, index) => {
+        for (let index = 0; index < this.props.length; index++){
             cells.push(
-                <React.Fragment key={this.props.word + index}>
+                <React.Fragment key={this.props.numberOfWords + this.props.firstCharacter + index}>
                     <Cell
                         currentWord={this.props.currentWord}
-                        answer={this.props.word[index]}
                         value={this.state.value}
                         index={index}
                         number={index === 0 ? this.props.number + 1 : null}
@@ -47,7 +45,7 @@ export default class Word extends Component {
                     />
                 </React.Fragment>
             );
-        });
+        };
 
         this.setState({ cells: cells, currentWord: this.props.currentWord });
     }
@@ -57,14 +55,12 @@ export default class Word extends Component {
     componentDidUpdate(prevProps) {
         if (prevProps !== this.props) {
             let cells = [];
-            const splitWord = this.props.word.split("");
 
-            splitWord.forEach((element, index) => {
+            for (let index = 0; index < this.props.length; index++) {
                 cells.push(
-                    <React.Fragment key={this.props.word + index}>
+                    <React.Fragment key={this.props.firstCharacter + index}>
                         <Cell
                             currentWord={this.props.currentWord}
-                            answer={this.props.word[index]}
                             value={this.state.tuples}
                             index={index}
                             number={index === 0 ? this.props.number + 1 : null}
@@ -87,7 +83,7 @@ export default class Word extends Component {
                         />
                     </React.Fragment>
                 );
-            });
+            };
 
             this.setState({
                 cells: cells,
@@ -95,9 +91,9 @@ export default class Word extends Component {
             });
         }
 
-        const { solved, solution } = this.state;
+        const { solved, length } = this.state;
 
-        if (this.state.solved.length === solution.length) {
+        if (this.state.solved.length === length) {
             this.props.wordChange(
                 {
                     value: solved,

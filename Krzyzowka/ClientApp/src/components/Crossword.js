@@ -11,42 +11,36 @@ export class Crossword extends Component {
                 width: 13,
                 wordList: [
                     {
-                        word: "uszka",
                         orientation: "down",
                         x: 1,
                         y: 2,
                         length: 5
                     },
                     {
-                        word: "szczeniak",
                         orientation: "across",
                         x: 1,
                         y: 3,
                         length: 9
                     },
                     {
-                        word: "piesek",
                         orientation: "down",
                         x: 5,
                         y: 1,
                         length: 6
                     },
                     {
-                        word: "samoyed",
                         orientation: "down",
                         x: 8,
                         y: 2,
                         length: 7
                     },
                     {
-                        word: "nos",
                         orientation: "across",
                         x: 7,
                         y: 5,
                         length: 3
                     },
                     {
-                        word: "mudik",
                         orientation: "across",
                         x: 6,
                         y: 8,
@@ -89,12 +83,21 @@ export class Crossword extends Component {
                 ],
                 attempts: [],
                 numberOfWords: 6,
+                firstLetters: [],
                 refs: [],
                 currentFocus: 0,
                 currentWord: null,
                 reset: false
             }
         };
+
+        this.state.data.firstLetters = new Array(this.state.data.wordList.length).fill(0);
+
+        this.state.data.wordList.forEach((word, index) => {
+            if (index < this.state.data.wordList.length);
+            this.state.data.firstLetters[index + 1] = this.state.data.firstLetters[index] + word.length;
+        });
+
     }
 
 
@@ -205,7 +208,7 @@ export class Crossword extends Component {
 
         //sumujemy liczby znaków w poprzednich słowach
         for (let i = 0; i < index; i++) {
-            startingCell += this.state.data.wordList[i].word.length;
+            startingCell += this.state.data.wordList[i].length;
         }
 
         //ustawiamy inteks słowa i jego początkowego znaku,
@@ -276,7 +279,7 @@ export class Crossword extends Component {
         //i dodamy do siebie ilości ich znaków
         //jeśli mowa o 1 słowie, to jego indeks już mamy
         for (let i = 0; i < nextWord; i++) {
-            startingCell += this.state.data.wordList[i].word.length;
+            startingCell += this.state.data.wordList[i].length;
         }
 
         //ustawiamy inteks słowa i jego początkowego znaku,

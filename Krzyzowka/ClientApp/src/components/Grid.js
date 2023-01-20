@@ -27,21 +27,24 @@ export default class Grid extends Component {
         if ( !this.state.wordsLoaded && this.props.data.numberOfWords === this.props.data.wordList.length ) {
             // WORDS are mapped each time CW rerenders?
             words = this.props.data.wordList.map((word, index) => (
+                <React.Fragment key={index}>
                 <Word
                     refer={this.props.data.refs[index]}
                     number={index}
-                    word={word.word}
+                    numberOfWords={this.props.data.numberOfWords}
+                    firstCharacter={this.props.data.firstLetters[index]}
                     x={word.x}
                     y={word.y}
                     orientation={word.orientation}
-                    key={word.word}
+                    length={word.length}
                     wordChange={this.handleWordChange}
                     addToRefs={this.props.addToRefs}
                     moveToNextCell={this.props.moveToNextCell}
                     moveToNextWord={this.props.moveToNextWord}
                     changeActiveCell={this.props.changeActiveCell}
                     currentWord={this.props.currentWord} 
-                />
+                    />
+                    </React.Fragment>
             ));
 
             this.setState({
