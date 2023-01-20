@@ -56,30 +56,12 @@ export class Crossword extends Component {
                     "dziwna rasa psa" 
                 ],
                 answers: [
-                    {
-                        word: "uszka",
-                        number: 0
-                    },
-                    {
-                        word: "szczeniak",
-                        number: 1
-                    },
-                    {
-                        word: "piesek",
-                        number: 2
-                    },
-                    {
-                        word: "samoyed",
-                        number: 3
-                    },
-                    {
-                        word: "nos",
-                        number: 4
-                    },
-                    {
-                        word: "mudik",
-                        number: 5
-                    }
+                    "uszka",
+                    "szczeniak",
+                    "piesek",
+                    "samoyed",
+                    "nos",
+                    "mudik"
                 ],
                 attempts: [],
                 numberOfWords: 6,
@@ -188,11 +170,11 @@ export class Crossword extends Component {
         */
 
         attempts.forEach((attempt) => {
-            if ( answers[attempt.number].word === attempt.word) {
+            if ( answers[attempt.number] === attempt.word) {
                 score += 1;
             }
             else {
-                console.log("zła odpowiedz: " + attempt.word + " poprawna to: " + answers[attempt.number].word);
+                console.log("zła odpowiedz: " + attempt.word + " poprawna to: " + answers[attempt.number]);
             }
             
         });
