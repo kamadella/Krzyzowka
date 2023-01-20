@@ -20,7 +20,7 @@ export default class Word extends Component {
 
         for (let index = 0; index < this.props.length; index++){
             cells.push(
-                <React.Fragment key={this.props.numberOfWords + this.props.firstCharacter + index}>
+                <React.Fragment key={this.props.firstCharacter + index}>
                     <Cell
                         currentWord={this.props.currentWord}
                         value={this.state.value}
