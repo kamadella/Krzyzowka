@@ -1,6 +1,6 @@
 import ApiAuthorzationRoutes from './components/api-authorization/ApiAuthorizationRoutes';
 import { Quiz } from "./components/Quiz";
-import { Crossword } from './components/Crossword';
+import { Crossword } from './components/Crossword/Crossword';
 import { Leaderboard } from "./components/Leaderboard";
 import { Home } from "./components/Home";
 
