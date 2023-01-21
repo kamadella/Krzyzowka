@@ -12,10 +12,17 @@
         {
             bool changes = false;
 
-            if(_context.Crosswords.FirstOrDefault()==null)
+            if(_context.Crosswords.FirstOrDefault() == null)
+            {
+                changes = true;
                 _context.Crosswords.AddRange(CrosswordFiller.crossword);
+            }
+                
             if (_context.WordPlacements.FirstOrDefault() == null)
+            {
+                changes = true;
                 _context.WordPlacements.AddRange(CrosswordFiller.wordPlacement);
+            }
 
             if (changes)
                 _context.SaveChanges();

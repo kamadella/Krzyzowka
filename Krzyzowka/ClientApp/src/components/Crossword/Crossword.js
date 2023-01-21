@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Grid from "./Grid";
+import authService from '../api-authorization/AuthorizeService';
 
 export class Crossword extends Component {
     constructor(props) {
@@ -69,7 +70,10 @@ export class Crossword extends Component {
                 refs: [],
                 currentFocus: 0,
                 currentWord: null,
-                reset: false
+                reset: false,
+
+                loading: true,
+                trial: []
             }
         };
 
@@ -80,6 +84,10 @@ export class Crossword extends Component {
             this.state.data.firstLetters[index + 1] = this.state.data.firstLetters[index] + word.length;
         });
 
+    }
+
+    componentDidMount() {
+        this.populateCrosswordData();
     }
 
 
@@ -316,7 +324,7 @@ export class Crossword extends Component {
         //        <Grid data={this.state.data}></Grid>
         //    </div>
         //);
-        if (this.state.data.wordList.length > 0) {
+        if (!this.state.data.loading && this.state.data.wordList.length > 0) {
             return (
                 <div className="CW-container">
                     <Grid 
@@ -347,5 +355,15 @@ export class Crossword extends Component {
         } else {
             return <p>Loading...</p>;
         }
+    }
+
+    async populateCrosswordData() {
+        const token = await authService.getAccessToken();
+        const response = await fetch('quiz', {
+            headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
+
+        });
+        const data = await response.json();
+        this.setState({ questions: data, loading: false });
     }
 }
