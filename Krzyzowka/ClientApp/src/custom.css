@@ -18,8 +18,8 @@ code {
 
 /*                KRZYŻÓWKA              */
 .Crossword_container {
-  width: 60%;
-  margin: auto;
+    width: 60%;
+    margin: auto;
 }
 
 .grid_container {
@@ -36,12 +36,42 @@ code {
 }
 
 .input {
-  background-color: transparent;
-  font-size: 8px;
-  border: 0;
-  padding: 2px;
-  text-transform: uppercase;
-  margin: 0;
+    background-color: transparent;
+    font-size: 8px;
+    border: 0;
+    text-transform: uppercase;
+    margin: 0;
+    caret-shape: underscore;
+}
+
+.cellInput {
+    background-color: transparent;
+    font-size: 8px;
+    vertical-align: text-top;
+    border: 0;
+    padding: 0px;
+    margin-left: -5px;
+    text-transform: uppercase;
+}
+.cellInputBlink {
+    background-color: transparent;
+    font-size: 8px;
+    height: 80%;
+    border: 0;
+    padding: 0px;
+    margin-left: -5px;
+    text-transform: uppercase;
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    from, to {
+        border-color: transparent;
+    }
+
+    50% {
+        border-bottom: double 1px;
+    }
 }
 
 .small {

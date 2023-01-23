@@ -10,7 +10,8 @@ export default class Word extends Component {
             tuples: [],
             indices: [],
             cells: [],
-            currentWord: null
+            currentWord: null,
+            isFocused: false
         };
     }
 
@@ -23,7 +24,6 @@ export default class Word extends Component {
                 <React.Fragment key={this.props.firstCharacter + index}>
                     <Cell
                         currentWord={this.props.currentWord}
-                        value={this.state.value}
                         value={this.state.value}
                         index={index}
                         number={index === 0 ? this.props.number + 1 : null}
@@ -43,6 +43,7 @@ export default class Word extends Component {
                         moveToNextCell={this.props.moveToNextCell}
                         moveToNextWord={this.props.moveToNextWord}
                         changeActiveCell={this.props.changeActiveCell}
+                        handleInputBlur={this.props.handleInputBlur}
                     />
                 </React.Fragment>
             );
@@ -81,6 +82,7 @@ export default class Word extends Component {
                             moveToNextCell={this.props.moveToNextCell}
                             moveToNextWord={this.props.moveToNextWord}
                             changeActiveCell={this.props.changeActiveCell}
+                            handleInputBlur={this.props.handleInputBlur}
                         />
                     </React.Fragment>
                 );

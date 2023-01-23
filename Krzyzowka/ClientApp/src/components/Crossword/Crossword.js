@@ -184,15 +184,24 @@ export class Crossword extends Component {
             nextCell = (currentFocus < refs.length - 1) ? currentFocus + 1 : 0;
         }
 
+        //liczymy następny wyraz
+        let newWord = 0;
+
+        for (let i = 1; this.state.metaData.firstLetters[i] <= nextCell; i++) {
+            newWord = i;
+        }
+
         this.setState(
             {
                 positioning: {
                     ...this.state.positioning,
-                    currentFocus: nextCell
+                    currentFocus: nextCell,
+                    currentWord: newWord
                 }
-            },
-            this.state.positioning.refs[nextCell].current.focus()
-        );
+            }
+        );   
+
+        this.state.positioning.refs[nextCell].current.focus();
         
     };
 
@@ -206,11 +215,9 @@ export class Crossword extends Component {
 
         //określamy zmienne na index następnego słowa i jego komurki początkowej
         let nextWord = 0;
-        let startingCell = 0;
 
         //jeśli przekazaliśmy true to cofamy się
         if (backwards) {
-
             //liczymy indeks poprzedniego słowa, pamiętając o tym, że jeśli obecne to 0, to musimy przejść na koniec
             nextWord = currentWord === 0 ? (numberOfWords - 1) : (currentWord - 1);
         } else {
@@ -222,24 +229,34 @@ export class Crossword extends Component {
         //aby to zrobić przejdziemy po każdym poprzednim 
         //i dodamy do siebie ilości ich znaków
         //jeśli mowa o 1 słowie, to jego indeks już mamy
-        for (let i = 0; i < nextWord; i++) {
-            startingCell += this.state.data.wordList[i].length;
-        }
+        
 
         //ustawiamy inteks słowa i jego początkowego znaku,
         //po czym przenosimy na jego komurkę uwagę
         this.setState(
             () => ({
                 positioning: {
-                    currentFocus: startingCell, 
+                    ...this.state.positioning,
+                    currentFocus: this.state.metaData.firstLetters[nextWord], 
                     currentWord: nextWord
                 },
             }),
-            this.state.positioning.refs[startingCell].current.focus()
+            this.state.positioning.refs[this.state.metaData.firstLetters[nextWord]].current.focus()
         );
         
     };
 
+
+    //przez wyłącza focus na słowie
+    handleInputBlur = () => {
+        this.setState(
+            () => ({
+                positioning: {
+                    ...this.state.positioning,
+                    currentWord: null
+                }
+            }));
+    }
 
     changeActiveCell = (activeCell) => {
         let newActiveCell = 0,
@@ -307,6 +324,7 @@ export class Crossword extends Component {
                             changeActiveCell={this.changeActiveCell}
                             currentWord={this.state.positioning.currentWord}
                             handleNewCurrentWord={this.handleNewCurrentWord}
+                            handleInputBlur={this.handleInputBlur}
                         ></Grid>
                         <div className='questions'>
                             {this.state.data.questions.map((question, index) => {

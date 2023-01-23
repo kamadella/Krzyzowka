@@ -43,6 +43,7 @@ export default class Grid extends Component {
                     moveToNextCell={this.props.moveToNextCell}
                     moveToNextWord={this.props.moveToNextWord}
                     changeActiveCell={this.props.changeActiveCell}
+                    handleInputBlur={this.props.handleInputBlur}
                     currentWord={this.props.currentWord} 
                     />
             ));

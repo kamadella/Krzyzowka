@@ -6,7 +6,8 @@ export default class Cell extends Component {
         this.state = { 
             inputVal: "",
             value: "",
-            currentWord: this.props.currentWord
+            currentWord: this.props.currentWord,
+            isFocused: false
         };
 
         this.cellRef = React.createRef();
@@ -41,12 +42,14 @@ export default class Cell extends Component {
                 wordNum: this.props.wordNum,
                 currentWord: this.props.wordNum
             });
+            this.setState({ isFocused: true });
         }
     };
 
-    //handleBlur = () => {
-    //    this.setState({ editing: !this.state.editing });
-    //};
+    handleBlur = () => {
+        this.setState({ isFocused: false });
+        this.props.handleInputBlur();
+    };
 
     handleChange = (e) => {
         let { index, wordNum } = this.props;
@@ -90,7 +93,13 @@ export default class Cell extends Component {
                 ? "rgba(0, 0, 0, 0.85)"
                 : this.props.currentWord === this.props.wordNum
                 ? "rgb(255,192,203)"
-                : "rgba(255, 255, 255, 0.85)";
+                    : "rgba(255, 255, 255, 0.85)";
+
+        const selected =
+            this.state.isFocused
+                ? "cellInputBlink"
+                : "cellInput";
+
 
         //skomplikowane wyliczenia zeby komorki ladnie sie wyswietlaly
         const x =
@@ -110,20 +119,20 @@ export default class Cell extends Component {
                 y={y}
                 width="10"
                 height="10"
-                className={ "input"}
+                className={"input"}
             >  
                     <input 
-                        type="text"
-                        tabIndex={-1}
-                        onFocus={this.handleFocus}
-                        onBlur={this.handleBlur}
-                        onChange={this.handleChange}
-                        onKeyDown={this.handleKeyDown}
-                        value={this.state.inputVal}
-                        className={"input"}
-                        maxLength="1"
-                        ref={this.cellRef}
-                    />
+                    type="text"
+                    tabIndex={-1}
+                    onFocus={this.handleFocus}
+                    onBlur={this.handleBlur}
+                    onChange={this.handleChange}
+                    onKeyDown={this.handleKeyDown}
+                    value={this.state.inputVal}
+                    className={selected}
+                    maxLength="1"
+                    ref={this.cellRef}
+                />
             </foreignObject>
         );
 
