@@ -108,11 +108,10 @@ export default class Cell extends Component {
             <foreignObject
                 x={x}
                 y={y}
-                width="9"
-                height="9"
+                width="10"
+                height="10"
                 className={ "input"}
             >  
-                <div >
                     <input 
                         type="text"
                         tabIndex={-1}
@@ -125,7 +124,6 @@ export default class Cell extends Component {
                         maxLength="1"
                         ref={this.cellRef}
                     />
-                </div>
             </foreignObject>
         );
 

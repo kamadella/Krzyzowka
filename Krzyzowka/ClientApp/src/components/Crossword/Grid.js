@@ -25,24 +25,26 @@ export default class Grid extends Component {
             );
 
         }
-        if ( !this.state.wordsLoaded && this.props.data.numberOfWords === this.props.data.wordList.length ) {
+        if (!this.state.wordsLoaded && this.props.metaData.numberOfWords === this.props.data.wordList.length ) {
             // WORDS are mapped each time CW rerenders?
             words = this.props.data.wordList.map((word, index) => (
                 <Word
-                    refer={this.props.data.refs[index]}
+                    refer={this.props.positioning.refs[index]}
                     number={index}
-                    word={word.word}
+                    numberOfWords={this.props.metaData.numberOfWords}
+                    firstCharacter={this.props.metaData.firstLetters[index]}
                     x={word.x}
                     y={word.y}
                     orientation={word.orientation}
-                    key={word.word}
+                    key={"w"+index}
+                    length={word.length}
                     wordChange={this.handleWordChange}
                     addToRefs={this.props.addToRefs}
                     moveToNextCell={this.props.moveToNextCell}
                     moveToNextWord={this.props.moveToNextWord}
                     changeActiveCell={this.props.changeActiveCell}
                     currentWord={this.props.currentWord} 
-                />
+                    />
             ));
 
             this.setState({

@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Krzyzowka.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class QuizController : ControllerBase

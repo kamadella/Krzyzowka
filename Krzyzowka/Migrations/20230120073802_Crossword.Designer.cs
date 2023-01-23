@@ -4,6 +4,7 @@ using Krzyzowka.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Krzyzowka.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230120073802_Crossword")]
+    partial class Crossword
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -318,7 +320,7 @@ namespace Krzyzowka.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GuessWords");
+                    b.ToTable("GuessWord");
                 });
 
             modelBuilder.Entity("Krzyzowka.Models.PossibleAnswer", b =>
@@ -377,7 +379,7 @@ namespace Krzyzowka.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("CrosswordId")
+                    b.Property<int?>("CrosswordId")
                         .HasColumnType("int");
 
                     b.Property<bool>("vertical")
@@ -398,7 +400,7 @@ namespace Krzyzowka.Migrations
 
                     b.HasIndex("wordId");
 
-                    b.ToTable("WordPlacements");
+                    b.ToTable("WordPlacement");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -569,9 +571,7 @@ namespace Krzyzowka.Migrations
                 {
                     b.HasOne("Krzyzowka.Models.Crossword", null)
                         .WithMany("words")
-                        .HasForeignKey("CrosswordId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CrosswordId");
 
                     b.HasOne("Krzyzowka.Models.GuessWord", "word")
                         .WithMany()
