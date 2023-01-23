@@ -8,92 +8,46 @@ export class Crossword extends Component {
 
         this.state = {
             data: {
-                height: 13,
-                width: 13,
-                wordList: [
-                    {
-                        orientation: "down",
-                        x: 1,
-                        y: 2,
-                        length: 5
-                    },
-                    {
-                        orientation: "across",
-                        x: 1,
-                        y: 3,
-                        length: 9
-                    },
-                    {
-                        orientation: "down",
-                        x: 5,
-                        y: 1,
-                        length: 6
-                    },
-                    {
-                        orientation: "down",
-                        x: 8,
-                        y: 2,
-                        length: 7
-                    },
-                    {
-                        orientation: "across",
-                        x: 7,
-                        y: 5,
-                        length: 3
-                    },
-                    {
-                        orientation: "across",
-                        x: 6,
-                        y: 8,
-                        length: 5
-                    }
-                ],
-                clues: [ 
-                    "zdrobnienie narządu do słyszenia",
-                    "psie dziecko", 
-                    "zdrobnienie slowa pies", 
-                    "najładniejsza rasa psa", 
-                    "służy do wąchania", 
-                    "dziwna rasa psa" 
-                ],
-                answers: [
-                    "uszka",
-                    "szczeniak",
-                    "piesek",
-                    "samoyed",
-                    "nos",
-                    "mudik"
-                ],
-                attempts: [],
-                numberOfWords: 6,
+                height: 0,
+                width: 0,
+                wordList: [],
+                clues: []
+            },
+            metaData: {
+                numberOfWords: 0,
                 firstLetters: [],
+            },
+            positioning: {
                 refs: [],
                 currentFocus: 0,
                 currentWord: null,
-                reset: false,
-
-                loading: true,
-                trial: []
-            }
+            },
+            attempts: [],
+            answers: [
+                "uszka",
+                "szczeniak",
+                "piesek",
+                "samoyed",
+                "nos",
+                "mudik"
+            ],
+        
+            reset: false,
+            loading: true,
         };
-
-        this.state.data.firstLetters = new Array(this.state.data.wordList.length).fill(0);
-
-        this.state.data.wordList.forEach((word, index) => {
-            if (index < this.state.data.wordList.length);
-            this.state.data.firstLetters[index + 1] = this.state.data.firstLetters[index] + word.length;
-        });
 
     }
 
     componentDidMount() {
         this.populateCrosswordData();
+        this.setState({ loading: false });
+
     }
 
 
     addSolvedWord = (tuple) => {
     
-        let { attempts } = this.state.data;
+        let { attempts } = this.state;
         let answeredIndices = [];
 
         tuple.word = tuple.word.toLowerCase();
@@ -108,11 +62,9 @@ export class Crossword extends Component {
                     tuple.word;
 
                 this.setState(
-                    (prevState) => ({
-                        data: {
-                            ...this.state.data,
-                            attempts: attempts
-                        }
+                    () => ({
+                        attempts: attempts
+                        
                     }),
                     console.log("Edytowano slowo ", tuple)
                 );
@@ -120,10 +72,7 @@ export class Crossword extends Component {
                 //add an attempt
                 this.setState(
                     (prevState) => ({
-                        data: {
-                            ...this.state.data,
-                            attempts: [...this.state.data.attempts, tuple]
-                        }
+                         attempts: [...this.state.attempts, tuple]
                     }),
                     console.log("Dodano slowo ", tuple)
                 );
@@ -132,10 +81,7 @@ export class Crossword extends Component {
             //add an attempt
             this.setState(
                 (prevState) => ({
-                    data: {
-                        ...this.state.data,
-                        attempts: [...this.state.data.attempts, tuple]
-                    }
+                    attempts: [...this.state.attempts, tuple]
                 }),
                 console.log("Added attempt ", tuple)
             );
@@ -144,7 +90,7 @@ export class Crossword extends Component {
 
 
     checkAnswers = () => {
-    const { attempts, answers } = this.state.data;
+    const { attempts, answers } = this.state;
         let score = 0;
         // sortedAnswers
         /*
@@ -192,6 +138,8 @@ export class Crossword extends Component {
 
     //przechodzimy do słowa o indeksie podanym w inpucie
     handleClueClick = (e, index) => {
+
+        console.log(this.state.data);
         //określamy indeks pierwszego znaku słowa
         //jeśli mówimy o 1 słowie, jest to już jego indeks
         let startingCell = 0;
@@ -204,17 +152,23 @@ export class Crossword extends Component {
         //ustawiamy inteks słowa i jego początkowego znaku,
         //po czym przenosimy na jego komurkę uwagę
         this.setState(
-            { currentFocus: startingCell, currentWord: index },
-            this.state.data.refs[startingCell].current.focus()
+            () => ({
+                positioning: {
+                    ...this.state.positioning,
+                    currentFocus: startingCell,
+                    currentWord: index
+                }
+            }),
+            this.state.positioning.refs[startingCell].current.focus()
             );
     };
 
 
     handleNewCurrentWord = (neWord) => {
         this.setState(
-            (prevState) => ({
-                data: {
-                    ...this.state.data,
+            () => ({
+                positioning: {
+                    ...this.state.positioning,
                     currentWord: neWord
                 }
             }),
@@ -228,7 +182,7 @@ export class Crossword extends Component {
         //here we will just call changeActiveCell with parameters in a
         //loop
 
-        const { currentFocus, refs } = this.state.data;
+        const { currentFocus, refs } = this.state.positioning;
         let nextCell = 0;
 
         if (backwards) {
@@ -238,8 +192,13 @@ export class Crossword extends Component {
         }
 
         this.setState(
-            { currentFocus: nextCell },
-            this.state.data.refs[nextCell].current.focus()
+            {
+                positioning: {
+                    ...this.state.positioning,
+                    currentFocus: nextCell
+                }
+            },
+            this.state.positioning.refs[nextCell].current.focus()
         );
         
     };
@@ -248,7 +207,8 @@ export class Crossword extends Component {
     moveToNextWord = (backwards) => {
 
         //pobieramy zmienne ze stanu
-        const { currentWord, numberOfWords } = this.state.data;
+        const { numberOfWords } = this.state.metaData;
+        const { currentWord } = this.state.positioning;
 
         //określamy zmienne na index następnego słowa i jego komurki początkowej
         let nextWord = 0;
@@ -275,8 +235,13 @@ export class Crossword extends Component {
         //ustawiamy inteks słowa i jego początkowego znaku,
         //po czym przenosimy na jego komurkę uwagę
         this.setState(
-            { currentFocus: startingCell, currentWord: nextWord },
-            this.state.data.refs[startingCell].current.focus()
+            () => ({
+                positioning: {
+                    currentFocus: startingCell, 
+                    currentWord: nextWord
+                },
+            }),
+            this.state.positioning.refs[startingCell].current.focus()
         );
         
     };
@@ -296,8 +261,8 @@ export class Crossword extends Component {
         newActiveCell = allPrevWords + allCurWordChars;
 
         this.setState((prevState) => ({
-            data: {
-                ...this.state.data,
+            positioning: {
+                ...this.state.positioning,
                 currentFocus: newActiveCell,
                 currentWord: activeCell.wordNum
             }
@@ -308,11 +273,11 @@ export class Crossword extends Component {
 
 
     addToRefs = (ref) => {
-        const { data } = this.state;
+        const { positioning } = this.state;
         this.setState((prevState) => ({
-            data: {
-                ...data,
-                refs: prevState.data.refs.concat(ref)
+            positioning: {
+                ...positioning,
+                refs: prevState.positioning.refs.concat(ref)
             }
         }));
     };
@@ -324,46 +289,81 @@ export class Crossword extends Component {
         //        <Grid data={this.state.data}></Grid>
         //    </div>
         //);
-        if (!this.state.data.loading && this.state.data.wordList.length > 0) {
+        if (this.state.loading) {
             return (
-                <div className="CW-container">
-                    <Grid 
-                    data={this.state.data} 
-                    addSolvedWord={this.addSolvedWord}
-                    addToRefs={this.addToRefs}
-                    moveToNextCell={this.moveToNextCell}
-                    moveToNextWord={this.moveToNextWord}
-                    changeActiveCell={this.changeActiveCell}
-                    currentWord={this.state.data.currentWord}
-                    handleNewCurrentWord={this.handleNewCurrentWord}
-                    ></Grid>
-                    {this.state.data.clues.map((clue, index) => {
-                        return (
-                        <div className={ this.state.data.currentWord === index ? "clue editing" : "clue "} key={clue}>
-                            <li onClick={(e) => this.handleClueClick(e, index) } >
-                            {clue}&nbsp;({this.state.data.wordList[index].length})
-                            </li>
-                        </div>
-                        );
-                    })}
-                    <div className="buttons">
-                        <button className="button" onClick={this.checkAnswers}>Sprawdź</button>
-                        <button className="button" onClick={this.loser}>Poddaj się</button>
-                    </div>
+                <div>
+                    <h1 id="tabelLabel" >Strona Quizu</h1>
+                    <p>Pobieranie pytań</p>
+                    <p><em>Loading...</em></p>
                 </div>
             );
-        } else {
-            return <p>Loading...</p>;
+        }
+        else {
+            if (this.state.data.wordList.length > 0) {
+                return (
+                    <div className="CW-container">
+                        <Grid
+                            data={this.state.data}
+                            metaData={this.state.metaData}
+                            positioning={this.state.positioning}
+                            addSolvedWord={this.addSolvedWord}
+                            addToRefs={this.addToRefs}
+                            moveToNextCell={this.moveToNextCell}
+                            moveToNextWord={this.moveToNextWord}
+                            changeActiveCell={this.changeActiveCell}
+                            currentWord={this.state.positioning.currentWord}
+                            handleNewCurrentWord={this.handleNewCurrentWord}
+                        ></Grid>
+                        {this.state.data.clues.map((clue, index) => {
+                            return (
+                                <div className={this.state.positioning.currentWord === index ? "clue editing" : "clue "} key={clue}>
+                                    <li onClick={(e) => this.handleClueClick(e, index)} >
+                                        {clue}&nbsp;({this.state.data.wordList[index].length})
+                                    </li>
+                                </div>
+                            );
+                        })}
+                        <div className="buttons">
+                            <button className="button" onClick={this.checkAnswers}>Sprawdź</button>
+                            <button className="button" onClick={this.loser}>Poddaj się</button>
+                        </div>
+                    </div>
+                );
+            } else {
+                return <p>Loading...</p>;
+            }
         }
     }
 
     async populateCrosswordData() {
         const token = await authService.getAccessToken();
-        const response = await fetch('quiz', {
+        const response = await fetch('crossword/data', {
             headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
 
         });
-        const data = await response.json();
-        this.setState({ questions: data, loading: false });
+        const responseData = await response.json();
+        this.setState({
+            data: responseData,
+        }, () => {
+
+            //ustawiamy długość tablicy z indeksami pierwszych znaków 
+            let firsts = new Array(this.state.data.wordList.length).fill(0);
+
+            //wypełniamy tablicę licząc indeksy pirewszych znaków
+            this.state.data.wordList.forEach((word, index) => {
+                if (index < this.state.data.wordList.length - 1) {
+                    firsts[index + 1] = firsts[index] + word.length;
+                }
+            });
+            //zapisujemy stan ilości liter i indeksów początkowych
+            this.setState({
+                metaData: {
+                    numberOfWords: this.state.data.wordList.length,
+                    firstLetters: firsts
+                }
+            });
+        }
+        );        
     }
+
 }

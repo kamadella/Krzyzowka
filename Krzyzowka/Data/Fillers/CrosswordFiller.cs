@@ -16,7 +16,7 @@ namespace Krzyzowka.Data.Fillers
                 vertical = true,
                 x = 1,
                 y = 2,
-                CrosswordId = 0,
+                CrosswordId = 1,
             },
             new WordPlacement()
             {
@@ -25,10 +25,10 @@ namespace Krzyzowka.Data.Fillers
                         clue = "psie dziecko",
                         word = "szczeniak",
                     },
-                vertical = true,
+                vertical = false,
                 x = 1,
                 y = 3,
-                CrosswordId = 0,
+                CrosswordId = 1,
             },
             new WordPlacement()
             {
@@ -40,7 +40,7 @@ namespace Krzyzowka.Data.Fillers
                 vertical = true,
                 x = 5,
                 y = 1,
-                CrosswordId = 0,
+                CrosswordId = 1,
             },
             new WordPlacement()
             {
@@ -52,7 +52,7 @@ namespace Krzyzowka.Data.Fillers
                 vertical = true,
                 x = 8,
                 y = 2,
-                CrosswordId = 0,
+                CrosswordId = 1,
             },
             new WordPlacement()
             {
@@ -61,10 +61,10 @@ namespace Krzyzowka.Data.Fillers
                         clue = "służy do wąchania",
                         word = "nos",
                     },
-                vertical = true,
+                vertical = false,
                 x = 7,
                 y = 5,
-                CrosswordId = 0,
+                CrosswordId = 1,
             },
             new WordPlacement()
             {
@@ -73,10 +73,10 @@ namespace Krzyzowka.Data.Fillers
                         clue = "dziwna rasa psa",
                         word = "mudik",
                     },
-                vertical = true,
+                vertical = false,
                 x = 6,
                 y = 8,
-                CrosswordId = 0,
+                CrosswordId = 1,
             }
         };
 

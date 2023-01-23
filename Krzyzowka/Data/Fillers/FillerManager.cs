@@ -10,22 +10,18 @@
 
         public void FillCrossword()
         {
-            bool changes = false;
-
             if(_context.Crosswords.FirstOrDefault() == null)
             {
-                changes = true;
                 _context.Crosswords.AddRange(CrosswordFiller.crossword);
+                _context.SaveChanges();
             }
                 
             if (_context.WordPlacements.FirstOrDefault() == null)
             {
-                changes = true;
                 _context.WordPlacements.AddRange(CrosswordFiller.wordPlacement);
-            }
-
-            if (changes)
                 _context.SaveChanges();
+            }
+                
 
         }
     }

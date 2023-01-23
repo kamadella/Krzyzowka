@@ -61,7 +61,7 @@ namespace Krzyzowka.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "wordPlacement",
+                name: "WordPlacement",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -74,14 +74,14 @@ namespace Krzyzowka.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_wordPlacement", x => x.Id);
+                    table.PrimaryKey("PK_WordPlacement", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_wordPlacement_Crosswords_CrosswordId",
+                        name: "FK_WordPlacement_Crosswords_CrosswordId",
                         column: x => x.CrosswordId,
                         principalTable: "Crosswords",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_wordPlacement_GuessWord_wordId",
+                        name: "FK_WordPlacement_GuessWord_wordId",
                         column: x => x.wordId,
                         principalTable: "GuessWord",
                         principalColumn: "Id",
@@ -94,13 +94,13 @@ namespace Krzyzowka.Migrations
                 column: "crosswordId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_wordPlacement_CrosswordId",
-                table: "wordPlacement",
+                name: "IX_WordPlacement_CrosswordId",
+                table: "WordPlacement",
                 column: "CrosswordId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_wordPlacement_wordId",
-                table: "wordPlacement",
+                name: "IX_WordPlacement_wordId",
+                table: "WordPlacement",
                 column: "wordId");
         }
 
@@ -110,7 +110,7 @@ namespace Krzyzowka.Migrations
                 name: "CrosswordSaves");
 
             migrationBuilder.DropTable(
-                name: "wordPlacement");
+                name: "WordPlacement");
 
             migrationBuilder.DropTable(
                 name: "Crosswords");

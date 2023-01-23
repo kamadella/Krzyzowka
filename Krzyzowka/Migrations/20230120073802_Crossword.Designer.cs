@@ -371,7 +371,7 @@ namespace Krzyzowka.Migrations
                     b.ToTable("Questions");
                 });
 
-            modelBuilder.Entity("Krzyzowka.Models.wordPlacement", b =>
+            modelBuilder.Entity("Krzyzowka.Models.WordPlacement", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -400,7 +400,7 @@ namespace Krzyzowka.Migrations
 
                     b.HasIndex("wordId");
 
-                    b.ToTable("wordPlacement");
+                    b.ToTable("WordPlacement");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -567,7 +567,7 @@ namespace Krzyzowka.Migrations
                         .HasForeignKey("QuestionId");
                 });
 
-            modelBuilder.Entity("Krzyzowka.Models.wordPlacement", b =>
+            modelBuilder.Entity("Krzyzowka.Models.WordPlacement", b =>
                 {
                     b.HasOne("Krzyzowka.Models.Crossword", null)
                         .WithMany("words")
