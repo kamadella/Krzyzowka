@@ -66,11 +66,11 @@ code {
 
 @keyframes blink {
     from, to {
-        border-color: transparent;
+        border-bottom: double 1px;
     }
 
     50% {
-        border-bottom: double 1px;
+        border-color: transparent;
     }
 }
 
