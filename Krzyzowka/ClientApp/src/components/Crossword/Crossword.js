@@ -11,7 +11,7 @@ export class Crossword extends Component {
                 height: 0,
                 width: 0,
                 wordList: [],
-                clues: []
+                questions: []
             },
             metaData: {
                 numberOfWords: 0,
@@ -22,7 +22,7 @@ export class Crossword extends Component {
                 currentFocus: 0,
                 currentWord: null,
             },
-            attempts: [],
+            user_answers: [],
             answers: [
                 "uszka",
                 "szczeniak",
@@ -47,23 +47,22 @@ export class Crossword extends Component {
 
     addSolvedWord = (tuple) => {
     
-        let { attempts } = this.state;
+        let { user_answers } = this.state;
         let answeredIndices = [];
 
         tuple.word = tuple.word.toLowerCase();
 
-        for (let i = 0; i < attempts.length; i++) {
-            answeredIndices.push(attempts[i].number);
+        for (let i = 0; i < user_answers.length; i++) {
+            answeredIndices.push(user_answers[i].number);
         }
 
-        if ( attempts.length !== 0) {
+        if ( user_answers.length !== 0) {
             if (answeredIndices.includes(tuple.number)) {
-                attempts[answeredIndices.indexOf(tuple.number)].word =
-                    tuple.word;
+                user_answers[answeredIndices.indexOf(tuple.number)].word = tuple.word;
 
                 this.setState(
                     () => ({
-                        attempts: attempts
+                        user_answers: user_answers
                         
                     }),
                     console.log("Edytowano slowo ", tuple)
@@ -72,7 +71,7 @@ export class Crossword extends Component {
                 //add an attempt
                 this.setState(
                     (prevState) => ({
-                         attempts: [...this.state.attempts, tuple]
+                         user_answers: [...this.state.user_answers, tuple]
                     }),
                     console.log("Dodano slowo ", tuple)
                 );
@@ -81,29 +80,26 @@ export class Crossword extends Component {
             //add an attempt
             this.setState(
                 (prevState) => ({
-                    attempts: [...this.state.attempts, tuple]
+                    user_answers: [...this.state.user_answers, tuple]
                 }),
-                console.log("Added attempt ", tuple)
+                console.log("Dodano slowo ", tuple)
             );
         }
     };
 
 
     checkAnswers = () => {
-    const { attempts, answers } = this.state;
-        let score = 0;
-        // sortedAnswers
-        /*
-        let sa = attempts.slice(0);
+        //pobieramy odpowiedzi użytkownika i te prawdziwe
+        const { user_answers, answers } = this.state.data;
 
         sa.sort((a, b) => {
             return a.number - b.number;
         });
-        //console.log(attempts, answers);
+        //console.log(user_answers, answers);
         
         let score = 0;
         let newAttempts = sa;
-        console.log(attempts);
+        console.log(user_answers);
         
         if (newAttempts.length === answers.length) {
             newAttempts.forEach((attempt, index) => {
@@ -119,11 +115,10 @@ export class Crossword extends Component {
             }
         } else {
 
-            console.log("Sorka ale musisz odpowiedziec na wszystko na razie masz: " + attempts.length + " na " + answers.length);
+            console.log("Sorka ale musisz odpowiedziec na wszystko na razie masz: " + user_answers.length + " na " + answers.length);
         }
-        */
 
-        attempts.forEach((attempt) => {
+        user_answers.forEach((attempt) => {
             if ( answers[attempt.number] === attempt.word) {
                 score += 1;
             }
@@ -138,8 +133,6 @@ export class Crossword extends Component {
 
     //przechodzimy do słowa o indeksie podanym w inpucie
     handleClueClick = (e, index) => {
-
-        console.log(this.state.data);
         //określamy indeks pierwszego znaku słowa
         //jeśli mówimy o 1 słowie, jest to już jego indeks
         let startingCell = 0;
@@ -202,6 +195,7 @@ export class Crossword extends Component {
         );
         
     };
+
     
     //funkcja która przenosi nas do następnego/poprzedniego słowa
     moveToNextWord = (backwards) => {
@@ -248,8 +242,6 @@ export class Crossword extends Component {
 
 
     changeActiveCell = (activeCell) => {
-        // activeCell = {index: 0, wordNum: 0}
-
         let newActiveCell = 0,
             allPrevWords = 0,
             allCurWordChars = activeCell.index;
@@ -282,6 +274,8 @@ export class Crossword extends Component {
         }));
     };
 
+
+
     render() {
         //return (
         //    <div>
@@ -299,7 +293,7 @@ export class Crossword extends Component {
             );
         }
         else {
-            if (this.state.data.wordList.length > 0) {
+            if (this.state.metaData.numberOfWords > 0) {
                 return (
                     <div className="CW-container">
                         <Grid
@@ -314,15 +308,19 @@ export class Crossword extends Component {
                             currentWord={this.state.positioning.currentWord}
                             handleNewCurrentWord={this.handleNewCurrentWord}
                         ></Grid>
-                        {this.state.data.clues.map((clue, index) => {
-                            return (
-                                <div className={this.state.positioning.currentWord === index ? "clue editing" : "clue "} key={clue}>
-                                    <li onClick={(e) => this.handleClueClick(e, index)} >
-                                        {clue}&nbsp;({this.state.data.wordList[index].length})
-                                    </li>
-                                </div>
-                            );
-                        })}
+                        <div className='questions'>
+                            {this.state.data.questions.map((question, index) => {
+                                return (
+
+                                    <div className={this.state.data.currentWord === index ? "question editing" : "question "} key={question}>
+                                        <li onClick={(e) => this.handleClueClick(e, index)} >
+                                            {index + 1}.  {question}&nbsp;({this.state.data.wordList[index].length})
+                                        </li>
+                                    </div>
+
+                                );
+                            })}
+                        </div>
                         <div className="buttons">
                             <button className="button" onClick={this.checkAnswers}>Sprawdź</button>
                             <button className="button" onClick={this.loser}>Poddaj się</button>

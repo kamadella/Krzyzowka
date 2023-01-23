@@ -45,10 +45,10 @@ namespace Krzyzowka.Controllers
                             {
                                 x = wp.x,
                                 y = wp.y,
-                                orientation = wp.vertical ? "down" : "across",
+                                orientation = wp.vertical ? "vertical" : "horizontal",
                                 length = wp.word.word.Length
                             }).ToArray(),
-                clues = words.Select(x => x.word.clue).ToArray()
+                questions = words.Select(x => x.word.clue).ToArray()
             };
            
             return resoult;

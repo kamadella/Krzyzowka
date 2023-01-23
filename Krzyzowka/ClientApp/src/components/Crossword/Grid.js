@@ -7,20 +7,21 @@ export default class Grid extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            grid: [],
-            solvedWords: [],
+            grid: [],  //nasze czarne pola
+            solvedWords: [], //odpowiedzi
             words: [],
             wordsLoaded: false,
             currentWord: this.props.currentWord
         };
     }
 
+    //to się dzieje dopiero jak zaktualizujemy coś wow wow
     componentDidUpdate(prevProps) {
         let words = [];
+        //zmiana aktualnego slowa
         if (prevProps.currentWord !== this.props.currentWord) {
             this.setState(
-                { currentWord: this.props.currentWord, wordsLoaded: false },
-                console.log("GcDu", this.props.currentWord)
+                { currentWord: this.props.currentWord, wordsLoaded: false }
             );
 
         }
@@ -54,12 +55,18 @@ export default class Grid extends Component {
         }
     }
 
+
+    //to się dzieje zaraz po render() samo z siebie :o
+    //ogólnie to wywola nam render 2 raz ale zaktualizuje grida do takiego jakiego go chcemy
+    //tu robimy cały ten czarny grid komórek
+    //szarych edytowalnych jeszcze nie mamy jak to się robi
     componentDidMount() {
         let width = this.props.data.width; //ile komorek na wysokosc
         let height = this.props.data.height;
         let newGrid = [];
 
         for (let i = 1; i < width; i++) {
+            //tu wywołuje komórki do grida
             for (let j = 1; j < height; j++) {
                 newGrid.push( //tworzymy komórki
                     <Cell x={i} y={j} value={"-"} key={`${i}-${j}`} />
@@ -68,10 +75,12 @@ export default class Grid extends Component {
         }
         this.setState({ grid: newGrid }); //tu ustalam cały grid komórek
     }
+
   
             
     handleWordChange = (tuple) => {
         //the incoming tuple is an array, needs sorting by tuple.index
+        console.log("grid handleWordChange", tuple);
         let sorted = tuple.value.slice(0);
         let word = "";
 
@@ -92,7 +101,7 @@ export default class Grid extends Component {
     render() {
         // to wielkosc calej planszy w sensie jak duza jest wyswietlana
         const dim =" 0 0 " + (10 * this.props.data.width + 3) + " " + (10 * this.props.data.height + 3); 
-        // to tworzymy komórki na uzupelnianie hasla
+        // to tworzymy komórki na uzupelnianie hasla 
         return (
             <div className="grid_container">
                 <svg viewBox={dim} xmlns="http://www.w3.org/2000/svg">

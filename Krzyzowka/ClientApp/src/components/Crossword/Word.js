@@ -24,16 +24,17 @@ export default class Word extends Component {
                     <Cell
                         currentWord={this.props.currentWord}
                         value={this.state.value}
+                        value={this.state.value}
                         index={index}
                         number={index === 0 ? this.props.number + 1 : null}
                         wordNum={this.props.number}
                         x={
-                            this.props.orientation === "across"
+                            this.props.orientation === "horizontal"
                                 ? this.props.x + index
                                 : this.props.x
                         }
                         y={
-                            this.props.orientation === "down"
+                            this.props.orientation === "vertical"
                                 ? this.props.y + index
                                 : this.props.y
                         }
@@ -66,12 +67,12 @@ export default class Word extends Component {
                             number={index === 0 ? this.props.number + 1 : null}
                             wordNum={this.props.number}
                             x={
-                                this.props.orientation === "across"
+                                this.props.orientation === "horizontal"
                                     ? this.props.x + index
                                     : this.props.x
                             }
                             y={
-                                this.props.orientation === "down"
+                                this.props.orientation === "vertical"
                                     ? this.props.y + index
                                     : this.props.y
                             }
@@ -113,7 +114,7 @@ export default class Word extends Component {
 
     handleWordChange = (tuple) => {
         //called by Cell handleChange
-        //console.log("word handleWordChange", tuple);
+        console.log("word handleWordChange", tuple);
         let { tuples, indices, solved } = this.state;
 
         if (this.state.indices.indexOf(tuple.index) === -1) {
