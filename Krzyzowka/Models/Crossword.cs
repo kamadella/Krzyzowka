@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Krzyzowka.Models
 {
@@ -14,8 +15,11 @@ namespace Krzyzowka.Models
         public int height { get; set; }
 
         [Required]
-        public List<WordPlacement> words { get; set; } = null!;
+        [DefaultValue(true)]
+        public bool isActive { get; set; } = true;
 
+        [Required]
+        public List<WordPlacement> words { get; set; } = null!;
     }
 
     public class WordPlacement
@@ -42,6 +46,9 @@ namespace Krzyzowka.Models
         public string word { get; set; } = null!;
         [Required]
         public string clue { get; set; } = null!;
+        [Required]
+        [DefaultValue(true)]
+        public bool isActive { get; set; } = true;
     }
 
 }
