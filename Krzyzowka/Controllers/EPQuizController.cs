@@ -8,13 +8,13 @@ namespace Krzyzowka.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class QuizController : ControllerBase
+    public class EPQuizController : ControllerBase
     {
         
 
-        private readonly ILogger<QuizController> _logger;
+        private readonly ILogger<EPQuizController> _logger;
 
-        public QuizController(ApplicationDbContext context, ILogger<QuizController> logger)
+        public EPQuizController(ApplicationDbContext context, ILogger<EPQuizController> logger)
         {
             _context = context;
             _logger = logger;
@@ -24,7 +24,7 @@ namespace Krzyzowka.Controllers
 
         [HttpGet]
         [Route("data/{id:int}")]
-        public IEnumerable<Question> Get()
+        public IEnumerable<Question> Get(int id)
         {
             return _context.Questions.Include(p=>p.possibleAnswers).Include(c=>c.correctAnswers).ToArray();
         }

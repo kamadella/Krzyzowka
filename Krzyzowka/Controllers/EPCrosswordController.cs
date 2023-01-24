@@ -11,13 +11,13 @@ namespace Krzyzowka.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class CrosswordController : ControllerBase
+    public class EPCrosswordController : ControllerBase
     {
 
 
-        private readonly ILogger<CrosswordController> _logger;
+        private readonly ILogger<EPCrosswordController> _logger;
 
-        public CrosswordController(ApplicationDbContext context, ILogger<CrosswordController> logger)
+        public EPCrosswordController(ApplicationDbContext context, ILogger<EPCrosswordController> logger)
         {
             _context = context;
             _logger = logger;
