@@ -23,6 +23,7 @@ namespace Krzyzowka.Controllers
         ApplicationDbContext _context { get; }
 
         [HttpGet]
+        [Route("data/{id:int}")]
         public IEnumerable<Question> Get()
         {
             return _context.Questions.Include(p=>p.possibleAnswers).Include(c=>c.correctAnswers).ToArray();

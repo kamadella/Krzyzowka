@@ -149,9 +149,10 @@ export class Quiz extends Component {
 
    
 
-  async populateQuizData() {
+    async populateQuizData() {
+      let id = 1;
       const token = await authService.getAccessToken();
-      const response = await fetch('quiz', {
+      const response = await fetch('quiz/data/'+id, {
           headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
 
       });
