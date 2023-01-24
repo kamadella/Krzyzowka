@@ -26,20 +26,16 @@ namespace Krzyzowka.Controllers
         ApplicationDbContext _context { get; }
 
         [HttpGet]
-        [Route("data")]
-        public CrosswordData Get()
+        [Route("data/{id:int}")]
+        public CrosswordData Get(int id)
         {
-            int id = 1;
-            FillerManager fillerManager = new FillerManager(_context);
-            fillerManager.FillCrossword();
-
             Crossword crossword = _context.Crosswords.Where(x => x.Id == id).FirstOrDefault()!;
             List<WordPlacement> words = _context.WordPlacements.Where(x => x.CrosswordId == id).Include(x => x.word).ToList();
 
             CrosswordData resoult = new CrosswordData
             {
-                height = 13,
-                width = 13,
+                height = crossword.height,
+                width = crossword.width,
                 wordList = words.Select(
                             wp => new Word()
                             {

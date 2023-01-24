@@ -21,7 +21,13 @@
                 _context.WordPlacements.AddRange(CrosswordFiller.wordPlacement);
                 _context.SaveChanges();
             }
-                
+
+            if (_context.Questions.FirstOrDefault() == null)
+            {
+                _context.Questions.AddRange(QuizFiller.quiz);
+                _context.SaveChanges();
+            }
+
 
         }
     }

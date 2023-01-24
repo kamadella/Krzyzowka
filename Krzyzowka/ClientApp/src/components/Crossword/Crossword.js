@@ -352,8 +352,9 @@ export class Crossword extends Component {
     }
 
     async populateCrosswordData() {
+        let id  = 1;
         const token = await authService.getAccessToken();
-        const response = await fetch('crossword/data', {
+        const response = await fetch('crossword/data/'+id, {
             headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
 
         });
