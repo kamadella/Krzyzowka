@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import Grid from "./Grid";
 import authService from '../api-authorization/AuthorizeService';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 export class Crossword extends Component {
     constructor(props) {
@@ -321,6 +322,7 @@ export class Crossword extends Component {
                         <div className="buttons">
                             <button className="button" onClick={this.checkAnswers}>Sprawdź</button>
                             <button className="button" onClick={this.loser}>Poddaj się</button>
+                            <CrosswordButton></CrosswordButton>
                         </div>
                     </div>
                 );
@@ -331,7 +333,7 @@ export class Crossword extends Component {
     }
 
     async populateCrosswordData() {
-
+        
         const params = new URLSearchParams(location.search);
         let id  = params.get("id");
         const token = await authService.getAccessToken();
@@ -364,4 +366,21 @@ export class Crossword extends Component {
         );        
     }
 
+}
+
+
+
+
+function CrosswordButton() {
+  const navigate = useNavigate();
+
+  function handleClick() {
+    navigate("/crosswordList");
+  }
+
+  return (
+    <button className="button" type="button" onClick={handleClick}>
+      Powrót
+    </button>
+  );
 }
