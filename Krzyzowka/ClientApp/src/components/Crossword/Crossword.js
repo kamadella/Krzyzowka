@@ -95,39 +95,13 @@ export class Crossword extends Component {
     checkAnswers = () => {
         //pobieramy odpowiedzi użytkownika i te prawdziwe
         const { user_answers, answers } = this.state.data;
-
-        sa.sort((a, b) => {
-            return a.number - b.number;
-        });
-        //console.log(user_answers, answers);
-        
         let score = 0;
-        let newAttempts = sa;
-        console.log(user_answers);
-        
-        if (newAttempts.length === answers.length) {
-            newAttempts.forEach((attempt, index) => {
-                if ( answers[attempt.number].word === attempt.word && answers[index].number === attempt.number ) {
-                    score += 1;
-                }
-            });
-
-            if (score === answers.length) {
-                console.log("Brawo wszystkie odgadłeś!");
-            } else {
-                console.log("przykro mi masz błąd!");
-            }
-        } else {
-
-            console.log("Sorka ale musisz odpowiedziec na wszystko na razie masz: " + user_answers.length + " na " + answers.length);
-        }
-
-        user_answers.forEach((attempt) => {
-            if ( answers[attempt.number] === attempt.word) {
+        user_answers.forEach((user_answer) => {
+            if ( answers[user_answer.number] === user_answer.word) {
                 score += 1;
             }
             else {
-                console.log("zła odpowiedz: " + attempt.word + " poprawna to: " + answers[attempt.number]);
+                console.log("zła odpowiedz: " + user_answer.word + " poprawna to: " + answers[user_answer.number]);
             }
             
         });
@@ -361,7 +335,7 @@ export class Crossword extends Component {
         const params = new URLSearchParams(location.search);
         let id  = params.get("id");
         const token = await authService.getAccessToken();
-        const response = await fetch('epcrossword/data/'+idCR, {
+        const response = await fetch('epcrossword/data/'+id, {
             headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
 
         });
