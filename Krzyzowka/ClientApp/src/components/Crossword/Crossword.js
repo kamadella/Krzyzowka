@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import Grid from "./Grid";
 import authService from '../api-authorization/AuthorizeService';
+import { useParams } from 'react-router-dom';
 
 export class Crossword extends Component {
     constructor(props) {
         super(props);
+        
 
         this.state = {
             data: {
@@ -36,6 +38,7 @@ export class Crossword extends Component {
             loading: true,
         };
 
+        
     }
 
     componentDidMount() {
@@ -300,6 +303,7 @@ export class Crossword extends Component {
         //        <Grid data={this.state.data}></Grid>
         //    </div>
         //);
+        
         if (this.state.loading) {
             return (
                 <div>
@@ -352,9 +356,11 @@ export class Crossword extends Component {
     }
 
     async populateCrosswordData() {
-        let id  = 1;
+        //let id  = 1;
+        const params = useParams();
+        const idCR  = params.id;
         const token = await authService.getAccessToken();
-        const response = await fetch('epcrossword/data/'+id, {
+        const response = await fetch('epcrossword/data/'+idCR, {
             headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
 
         });

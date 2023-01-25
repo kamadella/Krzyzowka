@@ -3,6 +3,7 @@ import { Quiz } from "./components/Quiz";
 import { Crossword } from './components/Crossword/Crossword';
 import { Leaderboard } from "./components/Leaderboard";
 import { Home } from "./components/Home";
+import React, { Component } from 'react';
 
 const AppRoutes = [
   {
@@ -14,7 +15,7 @@ const AppRoutes = [
     element: <Quiz /> 
   },
   {
-    path: '/crossword',
+    path: '/crossword/:id',
     element: <Crossword />
   },
   {
