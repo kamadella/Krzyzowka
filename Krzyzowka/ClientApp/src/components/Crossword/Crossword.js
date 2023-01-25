@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { useSearchParams } from "react-router-dom";
 import Grid from "./Grid";
 import authService from '../api-authorization/AuthorizeService';
 
@@ -352,7 +353,9 @@ export class Crossword extends Component {
     }
 
     async populateCrosswordData() {
-        let id  = 1;
+
+        const params = new URLSearchParams(location.search);
+        let id  = params.get("id");
         const token = await authService.getAccessToken();
         const response = await fetch('epcrossword/data/'+id, {
             headers: !token ? {} : { 'Authorization': `Bearer ${token}` }

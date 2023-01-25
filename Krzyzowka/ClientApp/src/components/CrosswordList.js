@@ -34,7 +34,7 @@ export class CrosswordList extends Component {
                     {crosswords.map(crossword =>
                         <tr key={crossword.id}>
                             <td>{crossword.id}</td>
-                            <td><a href="/crossword"><b>{crossword.name}</b></a></td>
+                            <td><a href={"/crossword?id="+crossword.id}><b>{crossword.name}</b></a></td>
                             <td>{crossword.width}x{crossword.height}</td>
                             <td>{crossword.questionCount}</td>
                         </tr>
