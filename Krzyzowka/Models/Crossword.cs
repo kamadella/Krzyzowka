@@ -9,6 +9,8 @@ namespace Krzyzowka.Models
         [Required]
         public int Id { get; set; }
 
+        public string name { get; set; } = "";
+
         [Required]
         public int width { get; set; }
         [Required]

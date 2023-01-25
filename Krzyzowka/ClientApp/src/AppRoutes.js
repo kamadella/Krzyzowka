@@ -3,7 +3,7 @@ import { Quiz } from "./components/Quiz";
 import { Crossword } from './components/Crossword/Crossword';
 import { Leaderboard } from "./components/Leaderboard";
 import { Home } from "./components/Home";
-import React, { Component } from 'react';
+import { CrosswordList } from './components/CrosswordList';
 
 const AppRoutes = [
   {
@@ -15,9 +15,14 @@ const AppRoutes = [
     element: <Quiz /> 
   },
   {
-    path: '/crossword/:id',
-    element: <Crossword />
-  },
+    path: '/crosswordList',
+    element: <CrosswordList />
+    },
+    {
+     path: '/crossword',
+     element: <Crossword />
+    },
+
   {
     path: '/leaderboard',
     //requireAuth: true,
