@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Word from "./Word";
 import Cell from "./Cell";
+import PropTypes, { arrayOf, number } from 'prop-types';
+
 
 //use content loader
 export default class Grid extends Component {
@@ -113,3 +115,21 @@ export default class Grid extends Component {
         );
     }
 }
+
+
+Grid.propTypes = {
+	currentWord: PropTypes.number,
+    data: PropTypes.shape({
+        height: PropTypes.number,
+        width: PropTypes.number,
+        wordList: PropTypes.shape({
+            word: PropTypes.string,
+            orientation: PropTypes.string,
+            x: PropTypes.number,
+            y: PropTypes.number,
+            length: PropTypes.number  
+        }),
+        questions: arrayOf(PropTypes.string),
+      }),
+
+};
