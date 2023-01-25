@@ -11,6 +11,7 @@ export class Crossword extends Component {
             data: {
                 height: 0,
                 width: 0,
+                name: "",
                 wordList: [],
                 questions: []
             },
@@ -314,6 +315,7 @@ export class Crossword extends Component {
             if (this.state.metaData.numberOfWords > 0) {
                 return (
                     <div className="CW-container">
+                        <div className="title"><h1>{ this.state.data.name}</h1></div>
                         <Grid
                             data={this.state.data}
                             metaData={this.state.metaData}

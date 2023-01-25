@@ -56,6 +56,7 @@ namespace Krzyzowka.Controllers
 
             CrosswordData resoult = new CrosswordData
             {
+                name = crossword.name,
                 height = crossword.height,
                 width = crossword.width,
                 wordList = words.Select(

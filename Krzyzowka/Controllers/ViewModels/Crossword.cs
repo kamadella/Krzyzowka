@@ -8,6 +8,7 @@ namespace Krzyzowka.Controllers.ViewModels
         public int height { get; set; }
         public string[] questions { get; set; } = { };
         public Word[] wordList { get; set; } = { };
+        public string name { get; set; } = "";
     }
 
     public class Word
