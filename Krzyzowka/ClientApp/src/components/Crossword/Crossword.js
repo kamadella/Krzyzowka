@@ -6,7 +6,7 @@ import authService from '../api-authorization/AuthorizeService';
 export class Crossword extends Component {
     constructor(props) {
         super(props);
-
+        // definicja krzyżówki
         this.state = {
             data: {
                 height: 0,
@@ -45,7 +45,7 @@ export class Crossword extends Component {
 
     }
 
-
+    //dodawanie słowa do krzyżówki
     addSolvedWord = (tuple) => {
     
         let { user_answers } = this.state;
@@ -281,7 +281,7 @@ export class Crossword extends Component {
 
 
 
-
+    //przekazanie do Grid w render()
     addToRefs = (ref) => {
         const { positioning } = this.state;
         this.setState((prevState) => ({
