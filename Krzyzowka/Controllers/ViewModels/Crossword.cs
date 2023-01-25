@@ -24,4 +24,13 @@ namespace Krzyzowka.Controllers.ViewModels
     {
         public string[] answers { get; set; } = { };
     }
+
+    public class CrosswordListElement
+    {
+        public int id { get; set; }
+        public string name { get; set; } = "";
+        public int width { get; set; }
+        public int height { get; set; }
+        public int questionCount { get; set; }
+    }
 }

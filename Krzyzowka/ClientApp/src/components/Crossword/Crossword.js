@@ -303,7 +303,7 @@ export class Crossword extends Component {
         if (this.state.loading) {
             return (
                 <div>
-                    <h1 id="tabelLabel" >Strona Quizu</h1>
+                    <h1 id="tabelLabel" >Strona Krzyżówki</h1>
                     <p>Pobieranie pytań</p>
                     <p><em>Loading...</em></p>
                 </div>

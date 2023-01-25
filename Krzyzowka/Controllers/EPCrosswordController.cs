@@ -26,8 +26,30 @@ namespace Krzyzowka.Controllers
         ApplicationDbContext _context { get; }
 
         [HttpGet]
+        [Route("list")]
+        public IEnumerable<CrosswordListElement> GetList()
+        {
+            List<Crossword> crosswords = _context.Crosswords.Where(x=> x.isActive).ToList();
+            var counts = _context.WordPlacements.GroupBy(x => x.CrosswordId).Select(g => new { id = g.Key, count = g.Count() });
+
+            List<CrosswordListElement> resoult = crosswords.Select(
+                x => new CrosswordListElement {
+                    id = x.Id,
+                    name = x.name,
+                    height = x.height,
+                    width = x.width,
+                    questionCount = 
+                        counts.Where(c => c.id == x.Id).Count() > 0 ? 
+                        counts.Where(c => c.id == x.Id).FirstOrDefault()!.count : 
+                        0
+                }).ToList();
+
+            return resoult;
+        }
+
+        [HttpGet]
         [Route("data/{id:int}")]
-        public CrosswordData Get(int id)
+        public CrosswordData GetItem(int id)
         {
             Crossword crossword = _context.Crosswords.Where(x => x.Id == id).FirstOrDefault()!;
             List<WordPlacement> words = _context.WordPlacements.Where(x => x.CrosswordId == id).Include(x => x.word).ToList();
