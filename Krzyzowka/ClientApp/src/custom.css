@@ -13,9 +13,22 @@ code {
   border-color: #1861ac;
 }
 
+.form{
+    padding:20px;
+}
+
 .title {
     width: 100%;
     text-align: center;
+}
+
+.details{
+    padding: 20px;
+    background-color: #d3e9ff;
+}
+
+.details-info{
+    margin-left: 20px;
 }
 
 
@@ -86,6 +99,25 @@ code {
 .heavy {
   font: bold 7px sans-serif;
   text-transform: uppercase;
+}
+
+.dataContainer{
+  margin-top: 5vh;
+}
+
+.inputSection{
+  margin-top:10px;
+  margin-bottom:10px;
+}
+
+.wordList {
+    margin-top: 10px;
+    padding: 5px;
+    height: inherit;
+    overflow: auto;
+    height: 50vh;
+    border-top: solid 3px black;
+    border-bottom: solid 3px black;
 }
 
 .questions {

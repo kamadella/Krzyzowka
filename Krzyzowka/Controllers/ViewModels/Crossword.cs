@@ -34,4 +34,29 @@ namespace Krzyzowka.Controllers.ViewModels
         public int height { get; set; }
         public int questionCount { get; set; }
     }
+
+    public class WordAppearences
+    {
+        public int Id { get; set; }
+        public string word { get; set; } = "";
+        public string clue { get; set; } = "";
+        public bool isActive { get; set; }
+        public List<string> crosswords { get; set; } = new List<string>();
+    }
+
+    public class WordPostData
+    {
+        public string word { get; set; } = "";
+        public string clue { get; set; } = "";
+    }
+    public class WordPutData
+    {
+        public int id { get; set; }
+        public string word { get; set; } = "";
+        public string clue { get; set; } = "";
+    }
+    public class WordDeleteData
+    {
+        public int id { get; set; }
+    }
 }

@@ -4,6 +4,7 @@ import { Crossword } from './components/Crossword/Crossword';
 import { Leaderboard } from "./components/Leaderboard";
 import { Home } from "./components/Home";
 import { CrosswordList } from './components/CrosswordList';
+import { WordList } from './components/WordList';
 
 const AppRoutes = [
   {
@@ -17,17 +18,20 @@ const AppRoutes = [
   {
     path: '/crosswordList',
     element: <CrosswordList />
-    },
-    {
-     path: '/crossword',
-     element: <Crossword />
-    },
-
+  },
+  {
+    path: '/crossword',
+    element: <Crossword />
+  },
   {
     path: '/leaderboard',
     //requireAuth: true,
     element: <Leaderboard />
-  },
+    },
+    {
+        path: '/wordList',
+        element: <WordList />
+    },
   ...ApiAuthorzationRoutes
 ];
 
