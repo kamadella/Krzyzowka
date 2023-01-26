@@ -27,6 +27,8 @@ export default class Cell extends Component {
                 this.props.deleteClearedWord(this.props.clear);
             }
         }
+
+        
     }
 
     //linkowanie po pytaniach
@@ -179,10 +181,8 @@ Cell.propTypes = {
     clear: PropTypes.number,
     wordNum: PropTypes.number,
     currentWord: PropTypes.number,
-    addToRefs: PropTypes.string,
     wordNum: PropTypes.number,
     index: PropTypes.number,
-    value: PropTypes.string,
     currentWord: PropTypes.number,
     x: PropTypes.number,
     y: PropTypes.number,

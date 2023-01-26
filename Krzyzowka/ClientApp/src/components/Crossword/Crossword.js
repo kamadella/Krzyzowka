@@ -96,6 +96,7 @@ export class Crossword extends Component {
         //pobieramy odpowiedzi użytkownika i te prawdziwe
         const { user_answers, answers } = this.state.data;
         let score = 0;
+        console.log(user_answers);
         user_answers.forEach((user_answer) => {
             if ( answers[user_answer.number] === user_answer.word) {
                 score += 1;

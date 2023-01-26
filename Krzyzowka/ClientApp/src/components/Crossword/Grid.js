@@ -77,6 +77,7 @@ export default class Grid extends Component {
             }
         }
         this.setState({ grid: newGrid }); //tu ustalam cały grid komórek
+        console.log(typeof( this.props.metaData.firstLetters[0] ));
     }
 
   
@@ -122,14 +123,11 @@ Grid.propTypes = {
     data: PropTypes.shape({
         height: PropTypes.number,
         width: PropTypes.number,
-        wordList: PropTypes.shape({
-            word: PropTypes.string,
-            orientation: PropTypes.string,
-            x: PropTypes.number,
-            y: PropTypes.number,
-            length: PropTypes.number  
-        }),
         questions: arrayOf(PropTypes.string),
       }),
+      metaData: PropTypes.shape({
+        numberOfWords: PropTypes.number,
+        firstLetters: PropTypes.arrayOf(PropTypes.number),
+      })
 
 };
