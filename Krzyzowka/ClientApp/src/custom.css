@@ -193,3 +193,20 @@ li {
 ::-webkit-scrollbar-thumb:hover {
   background: #c046a1; 
 }
+
+
+
+tr:hover,
+tr:focus-within {
+  background: pink;
+  outline: none;
+}
+
+td > a:first-child {
+  display: flex;
+  text-decoration: none;
+  color: inherit;
+  z-index: 0;
+
+
+}

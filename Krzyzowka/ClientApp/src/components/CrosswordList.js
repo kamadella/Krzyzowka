@@ -33,10 +33,10 @@ export class CrosswordList extends Component {
                 <tbody>
                     {crosswords.map(crossword =>
                         <tr key={crossword.id}>
-                            <td>{crossword.id}</td>
+                            <td><a href="#" tabIndex="-1" className="row-link">{crossword.id}</a></td>
                             <td><a href={"/crossword?id="+crossword.id}><b>{crossword.name}</b></a></td>
-                            <td>{crossword.width}x{crossword.height}</td>
-                            <td>{crossword.questionCount}</td>
+                            <td><a href="#" tabIndex="-1" className="row-link">{crossword.width}x{crossword.height}</a></td>
+                            <td><a href="#" tabIndex="-1" className="row-link">{crossword.questionCount}</a></td>
                         </tr>
                     )}
                 </tbody>

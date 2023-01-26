@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Word from "./Word";
 import Cell from "./Cell";
+import PropTypes, { arrayOf, number } from 'prop-types';
+
 
 //use content loader
 export default class Grid extends Component {
@@ -15,7 +17,7 @@ export default class Grid extends Component {
         };
     }
 
-    //to się dzieje dopiero jak zaktualizujemy coś wow wow
+    //jak zaktualizujemy coś 
     componentDidUpdate(prevProps) {
         let words = [];
         //zmiana aktualnego slowa
@@ -26,7 +28,7 @@ export default class Grid extends Component {
 
         }
         if (!this.state.wordsLoaded && this.props.metaData.numberOfWords === this.props.data.wordList.length ) {
-            // WORDS are mapped each time CW rerenders?
+            
             words = this.props.data.wordList.map((word, index) => (
                 <Word
                     refer={this.props.positioning.refs[index]}
@@ -75,6 +77,7 @@ export default class Grid extends Component {
             }
         }
         this.setState({ grid: newGrid }); //tu ustalam cały grid komórek
+        
     }
 
   
@@ -113,3 +116,18 @@ export default class Grid extends Component {
         );
     }
 }
+
+
+Grid.propTypes = {
+	currentWord: PropTypes.number,
+    data: PropTypes.shape({
+        height: PropTypes.number,
+        width: PropTypes.number,
+        questions: arrayOf(PropTypes.string),
+      }),
+      metaData: PropTypes.shape({
+        numberOfWords: PropTypes.number,
+        firstLetters: PropTypes.arrayOf(PropTypes.number),
+      })
+
+};

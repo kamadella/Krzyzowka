@@ -13,9 +13,11 @@ export class Quiz extends Component {
           loading: true,
           currentQuestionIndex: 0,
           score: 0,
-          answerContainsNumbers: false, //czy odpwowiedz ma same litery
-          answerIsLowercase: false, //czy odpowiedz jest napisana malymi literami
-          answerContainsFormat: false
+          answerContainsNumbers: true, //czy odpwowiedz ma same litery
+          answerIsLowercase: true, //czy odpowiedz jest napisana malymi literami
+          answerContainsFormat: true,
+          answerIsLong: true,
+          answerContainsLetters: true,
     };
 
      // Bind functions to the component instance
@@ -80,6 +82,7 @@ export class Quiz extends Component {
   validateAnswerData( event ){
     let data = event.target.value;
     var numbers = /[0-9]/;
+    var letters = /[a-zA-Z]/;
     // eslint-disable-next-line
     var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 
@@ -100,10 +103,22 @@ export class Quiz extends Component {
 
     if (data.match(format)) { //czy ma znaki psecjalne
       this.setState({ answerContainsFormat: false });
-  } else {
-      this.setState({ answerContainsFormat: true });
-  }
+    } else {
+        this.setState({ answerContainsFormat: true });
+    }
 
+    if (data.length < 1 ) { //czy ma znaki psecjalne
+      this.setState({ answerIsLong: false });
+    } else {
+        this.setState({ answerIsLong: true });
+    }
+
+    
+    if (data.match(letters)) { //czy NIE jest liczba
+      this.setState({ answerContainsLetters: false });
+    } else {
+        this.setState({ answerContainsLetters: true });
+    }
     
   } 
 
@@ -134,7 +149,7 @@ export class Quiz extends Component {
                                 ))
                             )}
                             {currentQuestion.type !== 2 && (
-                                <AnswerInput type={Text} questionId={this.state.currentQuestionIndex} handleChange={this.handleChange} handleAnswerSelected={this.handleAnswerSelected} to={this} />
+                                <AnswerInput typ={currentQuestion.type} type={Text} questionId={this.state.currentQuestionIndex} handleChange={this.handleChange} handleAnswerSelected={this.handleAnswerSelected} to={this} />
                             )}
                         </Question>
                     )}
@@ -163,7 +178,7 @@ export class Quiz extends Component {
 
 function Question({ question, questionId, children }) {
   return (
-    <div class="bg-light p-5 rounded">
+    <div className="bg-light p-5 rounded">
       <h2>{questionId+1}. Pytanie</h2>
       <p>{question}</p>
       {children}
@@ -179,29 +194,33 @@ function AnswerSelect({ answer, value, handleAnswerSelected }) {
   );
 }
 
-function AnswerInput({ type, handleAnswerSelected, handleChange, to, questionId }) {
-    const { answerContainsNumbers, answerIsLowercase, answerContainsFormat } = to.state;
+function AnswerInput({ typ, type, handleAnswerSelected, handleChange, to, questionId }) {
+    const { answerContainsNumbers, answerIsLowercase, answerContainsFormat, answerIsLong, answerContainsLetters } = to.state;
     if(questionId !== 3){
-      return (
-        <div >
-            <input type={type} onChange={e => to.handleChange(e) } /> 
-            <button onClick={handleAnswerSelected}> Następne Pytanie </button>
-        </div>
-        
-    );
+      if(typ === 0){
+        return (
+          <div >
+              <input  onChange={e => { to.validateAnswerData(e); to.handleChange(e) }} /> 
+              <Error status={answerContainsLetters} info="Odpowiedź nie może zawierać liter" ></Error>
+              <Error status={answerContainsFormat} info="Odpowiedź nie może zawierać znaków specjalnych" ></Error>
+              <Error status={answerIsLong} info="Odpowiedź musi mieć chociaż ten 1 znak" ></Error>
+              <button disabled={!answerContainsFormat || !answerIsLong} onClick={handleAnswerSelected}> Następne Pytanie </button>
+          </div>
+        );
+      }
+      else{
+        return (
+          <div >
+              <input  onChange={e => { to.validateAnswerData(e); to.handleChange(e) }} /> 
+              <Error status={answerContainsNumbers} info="Odpowiedź nie może zawierać liczb..." ></Error>
+              <Error status={answerIsLowercase} info="Odpowiedź musi być napisana malymi literami" ></Error>
+              <Error status={answerContainsFormat} info="Odpowiedź nie może zawierać znaków specjalnych" ></Error>
+              <Error status={answerIsLong} info="Odpowiedź musi mieć chociaż ten 1 znak" ></Error>
+              <button disabled={!answerContainsNumbers || !answerIsLowercase || !answerContainsFormat || !answerIsLong} onClick={handleAnswerSelected}> Następne Pytanie </button>
+          </div>
+      );
+      }
     }
-    else{
-      return (
-        <div >
-            <input type={type} onChange={e => { to.validateAnswerData(e); to.handleChange(e) }} /> 
-            <Error status={answerContainsNumbers} info="Odpowiedź nie może zawierać liczb" ></Error>
-            <Error status={answerIsLowercase} info="Odpowiedź musi być napisana malymi literami" ></Error>
-            <Error status={answerContainsFormat} info="Odpowiedź nie może zawierać znaków specjalnych" ></Error>
-            <button onClick={handleAnswerSelected}> Następne Pytanie </button>
-        </div>
-    );
-    }
-
   }
 
 function Result({ score, total, resetQuiz}) {

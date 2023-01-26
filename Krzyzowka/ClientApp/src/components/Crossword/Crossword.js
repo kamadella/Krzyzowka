@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import { useSearchParams } from "react-router-dom";
 import Grid from "./Grid";
 import authService from '../api-authorization/AuthorizeService';
+import { useParams } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 export class Crossword extends Component {
     constructor(props) {
         super(props);
-
+        // definicja krzyżówki
         this.state = {
             data: {
                 height: 0,
@@ -31,13 +33,14 @@ export class Crossword extends Component {
                 "piesek",
                 "samoyed",
                 "nos",
-                "mudik"
+                "mudi"
             ],
         
             reset: false,
             loading: true,
         };
 
+        
     }
 
     componentDidMount() {
@@ -46,7 +49,7 @@ export class Crossword extends Component {
 
     }
 
-
+    //dodawanie słowa do krzyżówki
     addSolvedWord = (tuple) => {
     
         let { user_answers } = this.state;
@@ -72,7 +75,7 @@ export class Crossword extends Component {
             } else {
                 //add an attempt
                 this.setState(
-                    (prevState) => ({
+                    () => ({
                          user_answers: [...this.state.user_answers, tuple]
                     }),
                     console.log("Dodano slowo ", tuple)
@@ -81,7 +84,7 @@ export class Crossword extends Component {
         } else {
             //add an attempt
             this.setState(
-                (prevState) => ({
+                () => ({
                     user_answers: [...this.state.user_answers, tuple]
                 }),
                 console.log("Dodano slowo ", tuple)
@@ -92,40 +95,15 @@ export class Crossword extends Component {
 
     checkAnswers = () => {
         //pobieramy odpowiedzi użytkownika i te prawdziwe
-        const { user_answers, answers } = this.state.data;
-
-        sa.sort((a, b) => {
-            return a.number - b.number;
-        });
-        //console.log(user_answers, answers);
-        
+        const { user_answers, answers } = this.state;
         let score = 0;
-        let newAttempts = sa;
         console.log(user_answers);
-        
-        if (newAttempts.length === answers.length) {
-            newAttempts.forEach((attempt, index) => {
-                if ( answers[attempt.number].word === attempt.word && answers[index].number === attempt.number ) {
-                    score += 1;
-                }
-            });
-
-            if (score === answers.length) {
-                console.log("Brawo wszystkie odgadłeś!");
-            } else {
-                console.log("przykro mi masz błąd!");
-            }
-        } else {
-
-            console.log("Sorka ale musisz odpowiedziec na wszystko na razie masz: " + user_answers.length + " na " + answers.length);
-        }
-
-        user_answers.forEach((attempt) => {
-            if ( answers[attempt.number] === attempt.word) {
+        user_answers.forEach((user_answer) => {
+            if ( answers[user_answer.number] === user_answer.word) {
                 score += 1;
             }
             else {
-                console.log("zła odpowiedz: " + attempt.word + " poprawna to: " + answers[attempt.number]);
+                console.log("zła odpowiedz: " + user_answer.word + " poprawna to: " + answers[user_answer.number]);
             }
             
         });
@@ -282,7 +260,7 @@ export class Crossword extends Component {
 
 
 
-
+    //przekazanie do Grid w render()
     addToRefs = (ref) => {
         const { positioning } = this.state;
         this.setState((prevState) => ({
@@ -302,6 +280,7 @@ export class Crossword extends Component {
         //        <Grid data={this.state.data}></Grid>
         //    </div>
         //);
+        
         if (this.state.loading) {
             return (
                 <div>
@@ -345,6 +324,7 @@ export class Crossword extends Component {
                         <div className="buttons">
                             <button className="button" onClick={this.checkAnswers}>Sprawdź</button>
                             <button className="button" onClick={this.loser}>Poddaj się</button>
+                            <CrosswordButton></CrosswordButton>
                         </div>
                     </div>
                 );
@@ -355,7 +335,7 @@ export class Crossword extends Component {
     }
 
     async populateCrosswordData() {
-
+        
         const params = new URLSearchParams(location.search);
         let id  = params.get("id");
         const token = await authService.getAccessToken();
@@ -389,3 +369,39 @@ export class Crossword extends Component {
     }
 
 }
+
+
+
+
+function CrosswordButton() {
+  const navigate = useNavigate();
+
+  function handleClick() {
+    navigate("/crosswordList");
+  }
+
+  return (
+    <button className="button" type="button" onClick={handleClick}>
+      Powrót
+    </button>
+  );
+}
+
+// chyba brak tutaj
+// import PropTypes, { number, string } from 'prop-types';
+// Crossword.propTypes = {
+// 	currentWord: PropTypes.number,
+//     data: PropTypes.shape({
+//         height: PropTypes.number,
+//         width: PropTypes.number,
+//         wordList: PropTypes.shape({
+//             word: PropTypes.string,
+//             orientation: PropTypes.string,
+//             x: PropTypes.number,
+//             y: PropTypes.number,
+//             length: PropTypes.number  
+//         }),
+//         questions: arrayOf(PropTypes.string),
+//       }),
+
+// };

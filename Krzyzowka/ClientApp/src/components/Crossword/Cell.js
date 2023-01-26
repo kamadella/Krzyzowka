@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes, { number, string } from 'prop-types';
 
 export default class Cell extends Component {
     constructor(props) {
@@ -10,10 +11,11 @@ export default class Cell extends Component {
             isFocused: false
         };
 
-        this.cellRef = React.createRef();
+        this.cellRef = React.createRef(); // podświetlenie ?
     }
 
-
+    // systemowa reacta (kiedy dane po warunku if się zaktualizują,
+    // wywołuje na nowo render (didUpdate w końcu))
     componentDidUpdate(prevProps) {
         // console.log("Cell-componentDidUpdate", this.props.clearAll);
         if (this.props !== prevProps) {
@@ -25,6 +27,8 @@ export default class Cell extends Component {
                 this.props.deleteClearedWord(this.props.clear);
             }
         }
+
+        
     }
 
     //linkowanie po pytaniach
@@ -51,11 +55,12 @@ export default class Cell extends Component {
         this.props.handleInputBlur();
     };
 
+    // zmiana liter ?
     handleChange = (e) => {
         let { index, wordNum } = this.props;
         let value = e.target.value;
 
-        if (/[a-zA-Z]/.test(value)) {
+        if (/[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]/.test(value)) { // walidacja
             this.setState(
                 {
                     value: value
@@ -86,6 +91,7 @@ export default class Cell extends Component {
         }
     }
 
+    // wyświetlanie komórek
     render() {
         //(status = age >= 18 ? 'adult' : 'minor';)
         const style =
@@ -101,7 +107,7 @@ export default class Cell extends Component {
                 : "cellInput";
 
 
-        //skomplikowane wyliczenia zeby komorki ladnie sie wyswietlaly
+        //matematyka do wyświetlania komórek
         const x =
             this.props.x === 1
                 ? this.props.x
@@ -169,3 +175,16 @@ export default class Cell extends Component {
         );
     }
 }
+
+
+Cell.propTypes = {
+    clear: PropTypes.number,
+    wordNum: PropTypes.number,
+    currentWord: PropTypes.number,
+    wordNum: PropTypes.number,
+    index: PropTypes.number,
+    currentWord: PropTypes.number,
+    x: PropTypes.number,
+    y: PropTypes.number,
+    number: PropTypes.number,
+};

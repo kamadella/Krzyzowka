@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Cell from "./Cell";
+import PropTypes, { number, string } from 'prop-types';
 
 export default class Word extends Component {
     constructor(props) {
@@ -109,18 +110,18 @@ export default class Word extends Component {
 
 
     addToRefs = (ref) => {
-        //called by Cell cDm
+        
         this.props.addToRefs(ref);
     };
 
 
     handleWordChange = (tuple) => {
-        //called by Cell handleChange
+        //cell handlechange z tego korzysta
         console.log("word handleWordChange", tuple);
         let { tuples, indices, solved } = this.state;
 
         if (this.state.indices.indexOf(tuple.index) === -1) {
-            //if incoming indice is empty
+            //jeśli jest puste
             this.setState(
                 {
                     tuples: [...tuples, tuple],
@@ -148,3 +149,14 @@ export default class Word extends Component {
         return this.state.cells;
     }
 }
+
+
+Word.propTypes = {
+    length: PropTypes.number,
+    firstCharacter: PropTypes.number,
+    currentWord: PropTypes.number,
+    number: PropTypes.number,
+    orientation: PropTypes.string,
+    x: PropTypes.number,
+    y: PropTypes.number,
+};
