@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes, { number, string } from 'prop-types';
 
 export default class Cell extends Component {
     constructor(props) {
@@ -169,3 +170,18 @@ export default class Cell extends Component {
         );
     }
 }
+
+
+Cell.propTypes = {
+    clear: PropTypes.number,
+    wordNum: PropTypes.number,
+    currentWord: PropTypes.number,
+    addToRefs: PropTypes.string,
+    wordNum: PropTypes.number,
+    index: PropTypes.number,
+    value: PropTypes.string,
+    currentWord: PropTypes.number,
+    x: PropTypes.number,
+    y: PropTypes.number,
+    number: PropTypes.number,
+};

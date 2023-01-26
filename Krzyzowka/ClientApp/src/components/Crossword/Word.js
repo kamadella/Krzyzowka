@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Cell from "./Cell";
+import PropTypes, { number, string } from 'prop-types';
 
 export default class Word extends Component {
     constructor(props) {
@@ -148,3 +149,14 @@ export default class Word extends Component {
         return this.state.cells;
     }
 }
+
+
+Word.propTypes = {
+    length: PropTypes.number,
+    firstCharacter: PropTypes.number,
+    currentWord: PropTypes.number,
+    number: PropTypes.number,
+    orientation: PropTypes.string,
+    x: PropTypes.number,
+    y: PropTypes.number,
+};

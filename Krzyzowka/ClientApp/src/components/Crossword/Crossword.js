@@ -384,3 +384,22 @@ function CrosswordButton() {
     </button>
   );
 }
+
+// chyba brak tutaj
+// import PropTypes, { number, string } from 'prop-types';
+// Crossword.propTypes = {
+// 	currentWord: PropTypes.number,
+//     data: PropTypes.shape({
+//         height: PropTypes.number,
+//         width: PropTypes.number,
+//         wordList: PropTypes.shape({
+//             word: PropTypes.string,
+//             orientation: PropTypes.string,
+//             x: PropTypes.number,
+//             y: PropTypes.number,
+//             length: PropTypes.number  
+//         }),
+//         questions: arrayOf(PropTypes.string),
+//       }),
+
+// };
