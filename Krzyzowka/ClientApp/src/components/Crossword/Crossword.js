@@ -32,7 +32,7 @@ export class Crossword extends Component {
                 "piesek",
                 "samoyed",
                 "nos",
-                "mudik"
+                "mudi"
             ],
         
             reset: false,
@@ -74,7 +74,7 @@ export class Crossword extends Component {
             } else {
                 //add an attempt
                 this.setState(
-                    (prevState) => ({
+                    () => ({
                          user_answers: [...this.state.user_answers, tuple]
                     }),
                     console.log("Dodano slowo ", tuple)
@@ -83,7 +83,7 @@ export class Crossword extends Component {
         } else {
             //add an attempt
             this.setState(
-                (prevState) => ({
+                () => ({
                     user_answers: [...this.state.user_answers, tuple]
                 }),
                 console.log("Dodano slowo ", tuple)
@@ -94,7 +94,7 @@ export class Crossword extends Component {
 
     checkAnswers = () => {
         //pobieramy odpowiedzi użytkownika i te prawdziwe
-        const { user_answers, answers } = this.state.data;
+        const { user_answers, answers } = this.state;
         let score = 0;
         console.log(user_answers);
         user_answers.forEach((user_answer) => {

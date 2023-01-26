@@ -77,7 +77,7 @@ export default class Grid extends Component {
             }
         }
         this.setState({ grid: newGrid }); //tu ustalam cały grid komórek
-        console.log(typeof( this.props.metaData.firstLetters[0] ));
+        
     }
 
   
