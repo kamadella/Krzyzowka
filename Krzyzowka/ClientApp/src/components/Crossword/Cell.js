@@ -11,10 +11,11 @@ export default class Cell extends Component {
             isFocused: false
         };
 
-        this.cellRef = React.createRef();
+        this.cellRef = React.createRef(); // podświetlenie ?
     }
 
-
+    // systemowa reacta (kiedy dane po warunku if się zaktualizują,
+    // wywołuje na nowo render (didUpdate w końcu))
     componentDidUpdate(prevProps) {
         // console.log("Cell-componentDidUpdate", this.props.clearAll);
         if (this.props !== prevProps) {
@@ -52,11 +53,12 @@ export default class Cell extends Component {
         this.props.handleInputBlur();
     };
 
+    // zmiana liter ?
     handleChange = (e) => {
         let { index, wordNum } = this.props;
         let value = e.target.value;
 
-        if (/[a-zA-Z]/.test(value)) {
+        if (/[a-zA-Z]/.test(value)) { // walidacja
             this.setState(
                 {
                     value: value
@@ -87,6 +89,7 @@ export default class Cell extends Component {
         }
     }
 
+    // wyświetlanie komórek
     render() {
         //(status = age >= 18 ? 'adult' : 'minor';)
         const style =
@@ -102,7 +105,7 @@ export default class Cell extends Component {
                 : "cellInput";
 
 
-        //skomplikowane wyliczenia zeby komorki ladnie sie wyswietlaly
+        //matematyka do wyświetlania komórek
         const x =
             this.props.x === 1
                 ? this.props.x

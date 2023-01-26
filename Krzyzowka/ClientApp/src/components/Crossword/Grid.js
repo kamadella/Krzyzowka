@@ -17,7 +17,7 @@ export default class Grid extends Component {
         };
     }
 
-    //to się dzieje dopiero jak zaktualizujemy coś wow wow
+    //jak zaktualizujemy coś 
     componentDidUpdate(prevProps) {
         let words = [];
         //zmiana aktualnego slowa
@@ -28,7 +28,7 @@ export default class Grid extends Component {
 
         }
         if (!this.state.wordsLoaded && this.props.metaData.numberOfWords === this.props.data.wordList.length ) {
-            // WORDS are mapped each time CW rerenders?
+            
             words = this.props.data.wordList.map((word, index) => (
                 <Word
                     refer={this.props.positioning.refs[index]}

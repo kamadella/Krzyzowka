@@ -110,18 +110,18 @@ export default class Word extends Component {
 
 
     addToRefs = (ref) => {
-        //called by Cell cDm
+        
         this.props.addToRefs(ref);
     };
 
 
     handleWordChange = (tuple) => {
-        //called by Cell handleChange
+        //cell handlechange z tego korzysta
         console.log("word handleWordChange", tuple);
         let { tuples, indices, solved } = this.state;
 
         if (this.state.indices.indexOf(tuple.index) === -1) {
-            //if incoming indice is empty
+            //jeśli jest puste
             this.setState(
                 {
                     tuples: [...tuples, tuple],
