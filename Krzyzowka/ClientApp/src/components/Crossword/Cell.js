@@ -60,7 +60,7 @@ export default class Cell extends Component {
         let { index, wordNum } = this.props;
         let value = e.target.value;
 
-        if (/[a-zA-Z]/.test(value)) { // walidacja
+        if (/[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]/.test(value)) { // walidacja
             this.setState(
                 {
                     value: value
