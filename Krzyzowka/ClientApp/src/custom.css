@@ -20,6 +20,7 @@ code {
 .title {
     width: 100%;
     text-align: center;
+    margin-bottom: 4vh;
 }
 
 .details{
@@ -133,6 +134,25 @@ code {
   color: white;
   cursor: pointer;
 }
+.trHeader:hover {
+    background-color:white;
+}
+.correctAnswer {
+    background-color: limegreen;
+    color: black;
+}
+.correctAnswer:hover{
+    background-color: lightgreen
+}
+
+.wrongAnswer {
+    background-color: lightcoral;
+    color: black;
+}
+.wrongAnswer:hover {
+    background-color: pink
+}
+
 
 .editing {
   background-color: pink;

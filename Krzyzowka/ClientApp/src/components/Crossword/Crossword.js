@@ -27,14 +27,7 @@ export class Crossword extends Component {
                 currentWord: null,
             },
             user_answers: [],
-            answers: [
-                "uszka",
-                "szczeniak",
-                "piesek",
-                "samoyed",
-                "nos",
-                "mudi"
-            ],
+            answers: [],
         
             reset: false,
             loading: true,
@@ -51,10 +44,8 @@ export class Crossword extends Component {
 
     //dodawanie słowa do krzyżówki
     addSolvedWord = (tuple) => {
-    
         let { user_answers } = this.state;
         let answeredIndices = [];
-
         tuple.word = tuple.word.toLowerCase();
 
         for (let i = 0; i < user_answers.length; i++) {
@@ -74,18 +65,20 @@ export class Crossword extends Component {
                 );
             } else {
                 //add an attempt
+                user_answers[tuple.number] = tuple.word;
                 this.setState(
                     () => ({
-                         user_answers: [...this.state.user_answers, tuple]
+                         user_answers: user_answers
                     }),
                     console.log("Dodano slowo ", tuple)
                 );
             }
         } else {
             //add an attempt
+            user_answers[tuple.number] = tuple.word;
             this.setState(
                 () => ({
-                    user_answers: [...this.state.user_answers, tuple]
+                    user_answers: [user_answers]
                 }),
                 console.log("Dodano slowo ", tuple)
             );
@@ -95,19 +88,9 @@ export class Crossword extends Component {
 
     checkAnswers = () => {
         //pobieramy odpowiedzi użytkownika i te prawdziwe
-        const { user_answers, answers } = this.state;
-        let score = 0;
-        console.log(user_answers);
-        user_answers.forEach((user_answer) => {
-            if ( answers[user_answer.number] === user_answer.word) {
-                score += 1;
-            }
-            else {
-                console.log("zła odpowiedz: " + user_answer.word + " poprawna to: " + answers[user_answer.number]);
-            }
-            
-        });
-        console.log("zdobyłeś punktów: " + score + " na " + answers.length);
+
+        this.populateAnswers();
+
     };
 
 
@@ -290,11 +273,11 @@ export class Crossword extends Component {
                 </div>
             );
         }
-        else {
+        else if (this.state.answers.length == 0) {
             if (this.state.metaData.numberOfWords > 0) {
                 return (
                     <div className="CW-container">
-                        <div className="title"><h1>{ this.state.data.name}</h1></div>
+                        <div className="title"><h1>{this.state.data.name}</h1></div>
                         <Grid
                             data={this.state.data}
                             metaData={this.state.metaData}
@@ -323,7 +306,6 @@ export class Crossword extends Component {
                         </div>
                         <div className="buttons">
                             <button className="button" onClick={this.checkAnswers}>Sprawdź</button>
-                            <button className="button" onClick={this.loser}>Poddaj się</button>
                             <CrosswordButton></CrosswordButton>
                         </div>
                     </div>
@@ -332,12 +314,55 @@ export class Crossword extends Component {
                 return <p>Loading...</p>;
             }
         }
+        else {
+            return (
+                <div className="CW-container">
+                    <div className="title"><h1>{this.state.data.name}</h1></div>
+                    
+                    <table className='table table-striped' aria-labelledby="tabelLabel">
+                        <thead>
+                            <tr className="trHeader">
+                                <th>id</th>
+                                <th>pytanie</th>
+                                <th>podana odpowiedź</th>
+                                <th>poprawna odpowiedź</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.state.data.questions.map((question, index) => {
+                                return (
+                                    <tr className={this.state.answers[index] === this.state.user_answers[index] ? "correctAnswer" : "wrongAnswer"} key={question}>
+                                        <td>
+                                            {index + 1}.
+                                        </td>
+                                        <td>
+                                            {question}
+                                        </td>
+                                        <td>
+                                            {this.state.user_answers[index]}
+                                        </td>
+                                        <td>
+                                            {this.state.answers[index]}
+                                        </td>
+                                    </tr>
+
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                    <div className="buttons">
+                        <CrosswordButton></CrosswordButton>
+                    </div>
+                </div>
+            );
+        }
+        
     }
 
     async populateCrosswordData() {
         
         const params = new URLSearchParams(location.search);
-        let id  = params.get("id");
+        let id = params.get("id");
         const token = await authService.getAccessToken();
         const response = await fetch('epcrossword/data/'+id, {
             headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
@@ -350,6 +375,7 @@ export class Crossword extends Component {
 
             //ustawiamy długość tablicy z indeksami pierwszych znaków 
             let firsts = new Array(this.state.data.wordList.length).fill(0);
+            let userAnswers = new Array(this.state.data.wordList.length).fill(" ");
 
             //wypełniamy tablicę licząc indeksy pirewszych znaków
             this.state.data.wordList.forEach((word, index) => {
@@ -364,8 +390,29 @@ export class Crossword extends Component {
                     firstLetters: firsts
                 }
             });
+
+            this.setState({
+                user_answers: userAnswers
+            });
         }
         );        
+    }
+
+    async populateAnswers() {
+        const params = new URLSearchParams(location.search);
+        let id = params.get("id");
+
+        const response = await fetch('epcrossword/answers/' + id, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const answers = await response.json();
+        this.setState({
+            answers: answers
+        });
     }
 
 }

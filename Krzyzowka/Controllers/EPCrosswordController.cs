@@ -74,6 +74,17 @@ namespace Krzyzowka.Controllers
         }
 
         [HttpGet]
+        [Route("answers/{id:int}")]
+        public List<string> GetAnswers(int id)
+        {
+            List<WordPlacement> words = _context.WordPlacements.Where(x => x.CrosswordId == id).Include(x => x.word).ToList();
+
+            List<string> resoult = words.Select(x => x.word.word).ToList();
+            
+            return resoult;
+        }
+
+        [HttpGet]
         [Route("word/list")]
         public IEnumerable<WordAppearences> GetWordList()
         {
