@@ -178,7 +178,7 @@ export class Quiz extends Component {
 
 function Question({ question, questionId, children }) {
   return (
-    <div class="bg-light p-5 rounded">
+    <div className="bg-light p-5 rounded">
       <h2>{questionId+1}. Pytanie</h2>
       <p>{question}</p>
       {children}
@@ -200,7 +200,7 @@ function AnswerInput({ typ, type, handleAnswerSelected, handleChange, to, questi
       if(typ === 0){
         return (
           <div >
-              <input type={type} onChange={e => { to.validateAnswerData(e); to.handleChange(e) }} /> 
+              <input  onChange={e => { to.validateAnswerData(e); to.handleChange(e) }} /> 
               <Error status={answerContainsLetters} info="Odpowiedź nie może zawierać liter" ></Error>
               <Error status={answerContainsFormat} info="Odpowiedź nie może zawierać znaków specjalnych" ></Error>
               <Error status={answerIsLong} info="Odpowiedź musi mieć chociaż ten 1 znak" ></Error>
@@ -211,7 +211,7 @@ function AnswerInput({ typ, type, handleAnswerSelected, handleChange, to, questi
       else{
         return (
           <div >
-              <input type={type} onChange={e => { to.validateAnswerData(e); to.handleChange(e) }} /> 
+              <input  onChange={e => { to.validateAnswerData(e); to.handleChange(e) }} /> 
               <Error status={answerContainsNumbers} info="Odpowiedź nie może zawierać liczb..." ></Error>
               <Error status={answerIsLowercase} info="Odpowiedź musi być napisana malymi literami" ></Error>
               <Error status={answerContainsFormat} info="Odpowiedź nie może zawierać znaków specjalnych" ></Error>
