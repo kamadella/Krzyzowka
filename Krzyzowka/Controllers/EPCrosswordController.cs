@@ -1,11 +1,11 @@
 ﻿using Krzyzowka.Controllers.ViewModels;
 using Krzyzowka.Data;
-using Krzyzowka.Data.Fillers;
 using Krzyzowka.Models;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Text;
 
 namespace Krzyzowka.Controllers
 {
@@ -56,6 +56,7 @@ namespace Krzyzowka.Controllers
 
             CrosswordData resoult = new CrosswordData
             {
+                name = crossword.name,
                 height = crossword.height,
                 width = crossword.width,
                 wordList = words.Select(
@@ -71,5 +72,85 @@ namespace Krzyzowka.Controllers
            
             return resoult;
         }
+
+        [HttpGet]
+        [Route("word/list")]
+        public IEnumerable<WordAppearences> GetWordList()
+        {
+            List<WordAppearences> resoult = new ();
+
+            List<GuessWord> words = _context.GuessWords.Where(x=>x.isActive).ToList();
+            List<WordPlacement> wordPlacements = _context.WordPlacements.ToList();
+            List<Crossword> crosswords = _context.Crosswords.ToList();
+
+            resoult = words.Select(x =>
+                new WordAppearences()
+                {
+                    Id = x.Id,
+                    word = x.word,
+                    clue = x.clue,
+                    /*
+                     * tutaj większa kwerenda, można ją czytać tak:
+                     * Wybieramy wszystkie umiejscowienia naszego słowa
+                     * Dizęki temu wiemy w jakich krzyżówkach wystąpiło (po Id)
+                     * Z krzyżówek w których wystąpiło tworzymy listę stringów w formie
+                     * id. nazwa
+                    */
+                    crosswords = crosswords.Where(
+                            c => wordPlacements.Where(w => w.word == x)
+                            .Select(s => s.CrosswordId)
+                            .Contains(c.Id))
+                            .Select(wn => wn.Id.ToString() +". "+ wn.name)
+                            .ToList(),
+                    isActive = x.isActive
+                }).ToList();
+
+            return resoult;
+        }
+
+        [HttpPost]
+        [Route("word/post")]
+        public void WordPost([FromBody]WordPostData data)
+        {
+            GuessWord newWord = new GuessWord()
+            {
+                isActive = true,
+                word = data.word,
+                clue = data.clue,
+            };
+
+            _context.GuessWords.Add(newWord);
+            _context.SaveChanges();
+        }
+
+        [HttpPut]
+        [Route("word/put")]
+        public void WordPut([FromBody]WordPutData data)
+        {
+            var source = _context.GuessWords.SingleOrDefault(x => x.Id == data.id);
+
+            if (source != null)
+            {
+                source.word = data.word;
+                source.clue = data.clue;
+
+                _context.SaveChanges();
+            }
+        }
+
+        [HttpDelete]
+        [Route("word/delete")]
+        public void WordDelete([FromBody]WordDeleteData data)
+        {
+            var source = _context.GuessWords.SingleOrDefault(x => x.Id == data.id);
+
+            if (source != null)
+            {
+                source.isActive = false;
+
+                _context.SaveChanges();
+            }
+        }
+
     }
 }
